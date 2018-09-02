@@ -1,0 +1,13 @@
+Package: compile.mgmt
+Type: Package
+Title: Compiling and Plotting Regression Results
+Version: 0.1.0
+Author: R.K. Yang
+Maintainer: R.K. Yang <rkzyang@gmail.com>
+Description: Compiling Regression Results for Management Journals.
+    Compiling Regression Results to Tables.
+    Plotting Regression Results to Graphs.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Suggests: testthat
