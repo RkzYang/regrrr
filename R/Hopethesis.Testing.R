@@ -21,7 +21,7 @@ slope.sig_after.mod <- function(m, model, mod_name, mod.n.sd = 1, full.data){
   mod_low <- mean(mod_vec) - mod.n.sd*sd(mod_vec)
   # fixed other moderators to mean
   other.mod.fexied.to.means <- colMeans(full.data[other.mod.names],na.rm = TRUE)
-  # a vector
+  # "a" vector
   (a_high <- c(1, mod_high, other.mod.fexied.to.means))
   (a_low  <- c(1, mod_low,  other.mod.fexied.to.means))
   # calculate the s.e.*
@@ -31,7 +31,7 @@ slope.sig_after.mod <- function(m, model, mod_name, mod.n.sd = 1, full.data){
   beta_star_high <- t(a_high) %*% m[related.var.position,2]
   beta_star_low  <- t(a_low) %*% m[related.var.position,2]
   # find sig for t dist.
-  sig <- function(beta, se){data.frame(t = beta/se, sig. = pt(beta/se, df = nrow(full.data)-1, lower.tail = FALSE)*2)}
+  sig <- function(beta, se){data.frame(t = beta/se, p. = pt(beta/se, df = nrow(full.data)-1, lower.tail = FALSE)*2)}
   result <- purrr::pmap(list(beta=list(beta_star_high, beta_star_low), se=list(se_star_high, se_star_low)), sig)
   names(result) <- c("high_level", "low_level")
   return(result)

@@ -1,13 +1,14 @@
 # plotting the interaction, with or without multiple interactions
 
 reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name = NULL, 
-                         main1.r, mdrt.r=NULL, int1.r=NULL,
-                         min_x=0.001, max_x=0.999, 
-                         mdrt_quantile_05=NULL, mdrt_quantile_50=NULL, mdrt_quantile_95=NULL, 
-                         mod.n.sd=NULL,
-                         title=NULL, xlab="X_Var.name", ylab="Y_Var.name", moderator.lab="Moderator_name",
-                         mdrt.low.name="Low", mdrt.mid.name=NULL, mdrt.high.name="High",
-                         y.hi.lim=NULL,y.low.lim=NULL){
+                   main1.r, mdrt.r=NULL, int1.r=NULL,
+                   min_x=0.001, max_x=0.999, 
+                   mdrt_quantile_05=NULL, mdrt_quantile_50=NULL, mdrt_quantile_95=NULL, 
+                   mod.n.sd=NULL,
+                   title=NULL, xlab="X_Var.name", ylab="Y_Var.name", moderator.lab="Moderator_name",
+                   mdrt.low.name="Low", mdrt.mid.name=NULL, mdrt.high.name="High",
+                   y.hi.lim=NULL,y.low.lim=NULL){
+  
   reg.result <- as.data.frame(reg.result)
   df <- as.data.frame(df)
   
@@ -17,7 +18,8 @@ reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name
   b.mdrt <- beta.vec[mdrt.r]
   b.int1 <- beta.vec[int1.r]
   
-  # 1.2 the row # of different variables
+  # 1.2 
+  # the row # of different variables
   para.r <- c(main1.r, mdrt.r, int1.r) # the row # of interested variables (main var, moderator, and their interaction)
   interaction.r <- which(stringr::str_detect(row.names(reg.result), patter=":")) # the row # of all interactions
   ctrl.interactions <- interaction.r[!(interaction.r %in% para.r)] # the row # control interactions
@@ -50,29 +52,18 @@ reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name
   otherterms <- df[row.names(reg.result)[other.control[-intercept.position]]] %>% as.matrix()
   otherTermMedians <- if(!is.null(mdrt_quantile_05)){robustbase::colMedians(otherterms, na.rm = TRUE)}else{colMeans(otherterms, na.rm = TRUE)}
   b.intercept <- ifelse(intercept.position > 0, b.othr.vec[intercept.position], 0)
-  constant.step1 <- as.numeric(b.intercept + t(otherTermMedians) %*% b.othr.vec[-intercept.position])
+  constant <- as.numeric(b.intercept + t(otherTermMedians) %*% b.othr.vec[-intercept.position])
   
-  # 2.2 holding ctrl moderators and ctrl interactions to median/mean
+  # 2.2 holding ctrl moderators to median/mean
   if(!is.null(mdrt_quantile_05)){
     M.ctrl.mod.1 <- ifelse(S < 1, 0, median(unlist(df[ctrl.moderator.names[1]]), na.rm = TRUE))
-    M.ctrl.int.1 <- ifelse(S < 1, 0, median(unlist(df[ctrl.moderator.names[1]]), na.rm = TRUE) * median(unlist(df[ctrl.itract.other.term.names[1]]), na.rm = TRUE))
     M.ctrl.mod.2 <- ifelse(S < 2, 0, median(unlist(df[ctrl.moderator.names[2]]), na.rm = TRUE))
-    M.ctrl.int.2 <- ifelse(S < 2, 0, median(unlist(df[ctrl.moderator.names[2]]), na.rm = TRUE) * median(unlist(df[ctrl.itract.other.term.names[2]]), na.rm = TRUE))
     M.ctrl.mod.3 <- ifelse(S < 3, 0, median(unlist(df[ctrl.moderator.names[3]]), na.rm = TRUE))
-    M.ctrl.int.3 <- ifelse(S < 3, 0, median(unlist(df[ctrl.moderator.names[3]]), na.rm = TRUE) * median(unlist(df[ctrl.itract.other.term.names[3]]), na.rm = TRUE))
   }else{
     M.ctrl.mod.1 <- ifelse(S < 1, 0, mean(unlist(df[ctrl.moderator.names[1]]), na.rm = TRUE))
-    M.ctrl.int.1 <- ifelse(S < 1, 0, mean(unlist(df[ctrl.moderator.names[1]]), na.rm = TRUE) * mean(unlist(df[ctrl.itract.other.term.names[1]]), na.rm = TRUE))
     M.ctrl.mod.2 <- ifelse(S < 2, 0, mean(unlist(df[ctrl.moderator.names[2]]), na.rm = TRUE)) 
-    M.ctrl.int.2 <- ifelse(S < 2, 0, mean(unlist(df[ctrl.moderator.names[2]]), na.rm = TRUE) * mean(unlist(df[ctrl.itract.other.term.names[2]]), na.rm = TRUE))
     M.ctrl.mod.3 <- ifelse(S < 3, 0, mean(unlist(df[ctrl.moderator.names[3]]), na.rm = TRUE))
-    M.ctrl.int.3 <- ifelse(S < 3, 0, mean(unlist(df[ctrl.moderator.names[3]]), na.rm = TRUE) * mean(unlist(df[ctrl.itract.other.term.names[3]]), na.rm = TRUE))
   }
-  constant.step2 <- b.ctrl.mod.1 * M.ctrl.mod.1 + b.ctrl.int.1 * M.ctrl.int.1 + 
-    b.ctrl.mod.2 * M.ctrl.mod.2 + b.ctrl.int.2 * M.ctrl.int.2 + 
-    b.ctrl.mod.3 * M.ctrl.mod.3 + b.ctrl.int.3 * M.ctrl.int.3  
-  # 2.3 finalize the constant term
-  constant <- constant.step1 + constant.step2
   
   # 3 set moderator levels (low, mid, high)
   if(is.null(mdrt.r)){
@@ -101,9 +92,25 @@ reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name
   library(extrafont)
   library(ggthemes)
   
-  fit.low  <- function(x){constant + b.main*x + b.mdrt*mdrt.low + b.int1*x*mdrt.low}
-  fit.mid  <- function(x){constant + b.main*x + b.mdrt*mdrt.mid + b.int1*x*mdrt.mid}
-  fit.high <- function(x){constant + b.main*x + b.mdrt*mdrt.high + b.int1*x*mdrt.high}
+  # function for plot | note: only x is a variable 
+  fit.low  <- function(x){constant + b.main*x + b.mdrt*mdrt.low  + b.int1*x*mdrt.low + 
+      b.ctrl.mod.1*M.ctrl.mod.1 + b.ctrl.int.1*x*M.ctrl.mod.1 +
+      b.ctrl.mod.2*M.ctrl.mod.2 + b.ctrl.int.2*x*M.ctrl.mod.2 +
+      b.ctrl.mod.3*M.ctrl.mod.3 + b.ctrl.int.3*x*M.ctrl.mod.3
+  }
+  
+  fit.mid  <- function(x){constant + b.main*x + b.mdrt*mdrt.mid  + b.int1*x*mdrt.mid +
+      b.ctrl.mod.1*M.ctrl.mod.1 + b.ctrl.int.1*x*M.ctrl.mod.1 +
+      b.ctrl.mod.2*M.ctrl.mod.2 + b.ctrl.int.2*x*M.ctrl.mod.2 +
+      b.ctrl.mod.3*M.ctrl.mod.3 + b.ctrl.int.3*x*M.ctrl.mod.3
+  }
+  
+  fit.high <- function(x){constant + b.main*x + b.mdrt*mdrt.high + b.int1*x*mdrt.high +
+      b.ctrl.mod.1*M.ctrl.mod.1 + b.ctrl.int.1*x*M.ctrl.mod.1 +
+      b.ctrl.mod.2*M.ctrl.mod.2 + b.ctrl.int.2*x*M.ctrl.mod.2 +
+      b.ctrl.mod.3*M.ctrl.mod.3 + b.ctrl.int.3*x*M.ctrl.mod.3
+  }
+  
   p <-  ggplot(df, aes_string(x=x_var.name, y=y_var.name)) +
     scale_x_continuous(limits=c(min.x, max.x), xlab) +
     scale_y_continuous(limits=c(y.low.lim, y.hi.lim), ylab) 
