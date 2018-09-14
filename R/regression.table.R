@@ -17,38 +17,73 @@ reg.combine <- function(tbl_1, tbl_2, tbl_3=NULL, tbl_4=NULL, tbl_5=NULL, tbl_6=
   names(main.table) <- c("Variables", paste0("Model ", 0:(non_empty-1))) 
   return(main.table)}
 
-# updated 9/2/2018 #
+# updated 9/13/2018 #
 mod.compare <- function(model1, model2, model3=NULL, model4=NULL, model5=NULL, model6=NULL, model7=NULL, model8=NULL, model9=NULL, model10=NULL,
-                        likelihood.only = FALSE, round.digit = 3){
+                        likelihood.only = FALSE, round.digit = 3, 
+                        main.effect.only = NULL,
+                        intn.effect.only = NULL){
+  
+  list_all <- list(model1, model2, model3, model4, model5, model6, model7, model8, model9, model10)
+  non_empty <- 10 - sum(unlist(purrr::map(list_all, is.null)))
+  model_list <- list_all[1:non_empty]
+  
+  n <- non_empty
+  compare <- if(n==2){
+    suppressWarnings(suppressMessages(anova(model1,model2)))}else if(n==3){
+      suppressWarnings(suppressMessages(anova(model1,model2,model3)))}else if(n==4){
+        suppressWarnings(suppressMessages(anova(model1,model2,model3,model4)))}else if(n==5){
+          suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5)))}else if(n==6){
+            suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6)))}else if(n==7){
+              suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7)))}else if(n==8){
+                suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8)))}else if(n==9){
+                  suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9)))}else if(n==10){
+                    suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10)))}
   
   if(likelihood.only == TRUE){
-    list_all <- list(model1, model2, model3, model4, model5, model6, model7, model8, model9, model10)
-    non_empty <- 10 - sum(unlist(purrr::map(list_all, is.null)))
-    model_list <- list_all[1:non_empty]
     compare.df <- c("LogLikihood", round(unlist(purrr::map(model_list, logLik)), round.digit))
   }else
   {
-    
-  compare <- suppressWarnings(suppressMessages(anova(model1, model2, model3, model4, model5, model6, model7, model8, model9, model10)))
+    if(!is.null(main.effect.only)){
+      for(i in main.effect.only){
+        compare[i,] <- anova(model_list[[main.effect.only[1]-2]], model_list[[i]])[2,]
+      }
+    }
+    if(!is.null(intn.effect.only)){
+      for(i in intn.effect.only){
+        compare[i,] <- if(!is.null(main.effect.only)){anova(model_list[[i-length(main.effect.only)]], model_list[[i]])[2,]
+        }else{
+          anova(model_list[[intn.effect.only[1] - 1]], model_list[[i]])[2,]
+        }
+      }
+    }
+  }
+  
   ch          <- function(x){as.character(x)}
   convert.sig <- function(df){ifelse(df<0.001,"***",ifelse(df<0.01,"**",ifelse(df<0.05,"*",ifelse(df<0.1,"†",""))))}
   dg          <- function(x)formatC(x, format = "f", digits = 3)
-  model.list  <- list(model1, model2, model3, model4, model5,model6,model7,model8)
-  model.list  <- model.list[1:sum(!unlist((purrr::map(model.list, is.null))))]
-
-  compare.df <- if(class(model1)=="lm"){
-    data.frame(R_squared=ch(t(dg(unlist(purrr::map(purrr::map(model.list, summary), function(df){df$r.squared}))))),
-               Adj_R_squared=ch(t(dg(unlist(purrr::map(purrr::map(model.list, summary), function(df){df$adj.r.squared}))))),
-               F=ch(t(dg(compare[5][[1]]))),
-               sig=ch(t(convert.sig(compare[6][[1]])))) %>% tidyr::unite(F,F,sig,sep="") %>% t()
+  
+  
+  compare.df <- if(class(model1)[1]=="negbin"){
+    data.frame(AIC=ch(t(dg(unlist(purrr::map(model_list, MuMIn::AICc))))),
+               Log_Likelihood=ch(t(dg(compare[3][[1]]))), Chisq=ch(t(dg(compare[7][[1]]))),
+               sig=ch(t(convert.sig(compare[8][[1]])))) %>% unite(Chisq,Chisq,sig,sep="") %>% t()
+  }else if(class(model1)[1]=="lmerMod"){
+    data.frame(AIC=ch(t(dg(unlist(purrr::map(model_list, MuMIn::AICc))))),
+               Log_Likelihood=ch(t(dg(compare[4][[1]]))), Chisq=ch(t(dg(compare[6][[1]]))),
+               sig=ch(t(convert.sig(compare[8][[1]])))) %>% unite(Chisq,Chisq,sig,sep="") %>% t()
+  }else if(class(model1)[1]=="lm"){
+    data.frame(R_squared=ch(t(dg(unlist(purrr::map(model_list, function(df){summary(df)$r.squared}))))),
+               Adj_R_squared=ch(t(dg(unlist(purrr::map(model_list, function(df){summary(df)$adj.r.squared}))))),
+               Delta_F=ch(t(dg(compare[5][[1]]))),
+               sig=ch(t(convert.sig(compare[6][[1]])))) %>% tidyr::unite(Delta_F,Delta_F,sig,sep="") %>% t()
   }else{
-    data.frame(AIC=ch(t(dg(compare[2][[1]]))),BIC=ch(t(dg(compare[3][[1]]))),
-               Log_Likelihood=ch(t(dg(compare[4][[1]]))),Chisq=ch(t(dg(compare[6][[1]]))),
-               sig=ch(t(convert.sig(compare[8])))) %>% tidyr::unite(Chisq,Chisq,sig,sep="") %>% t()
-  }
+    data.frame(AIC=ch(t(dg(unlist(purrr::map(model_list, MuMIn::AICc))))),
+               Log_Likelihood=ch(t(dg(compare[1][[1]]))),Chisq=ch(t(dg(compare[2][[1]]))),
+               sig=ch(t(convert.sig(compare[4][[1]])))) %>% unite(Chisq,Chisq,sig,sep="") %>% t() }
+  
   compare.df[nrow(compare.df),1] <- ""
-  compare.df <- data.frame(Variables=row.names(compare.df),compare.df)
-  }
+  compare.df <- data.frame(Variables=row.names(compare.df),compare.df) 
+  
   names(compare.df) <- c("Variables", paste0("Model ", 0:(non_empty-1))) 
   return(compare.df)
 }

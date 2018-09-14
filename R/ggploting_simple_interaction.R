@@ -48,12 +48,12 @@ reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name
   # 2.1 holding other terms (excluding ctrl moderators and ctrl interactions) to median/mean
   intercept.position <- ifelse(stringr::str_detect(row.names(reg.result)[1], pattern = "ntercept"), 1, length(other.control)+1 )
   otherterms <- df[row.names(reg.result)[other.control[-intercept.position]]] %>% as.matrix()
-  otherTermMedians <- if(!is.null(mdrt_05)){robustbase::colMedians(otherterms, na.rm = TRUE)}else{colMeans(otherterms, na.rm = TRUE)}
+  otherTermMedians <- if(!is.null(mdrt_quantile_05)){robustbase::colMedians(otherterms, na.rm = TRUE)}else{colMeans(otherterms, na.rm = TRUE)}
   b.intercept <- ifelse(intercept.position > 0, b.othr.vec[intercept.position], 0)
   constant.step1 <- as.numeric(b.intercept + t(otherTermMedians) %*% b.othr.vec[-intercept.position])
   
   # 2.2 holding ctrl moderators and ctrl interactions to median/mean
-  if(!is.null(mdrt_05)){
+  if(!is.null(mdrt_quantile_05)){
     M.ctrl.mod.1 <- ifelse(S < 1, 0, median(unlist(df[ctrl.moderator.names[1]]), na.rm = TRUE))
     M.ctrl.int.1 <- ifelse(S < 1, 0, median(unlist(df[ctrl.moderator.names[1]]), na.rm = TRUE) * median(unlist(df[ctrl.itract.other.term.names[1]]), na.rm = TRUE))
     M.ctrl.mod.2 <- ifelse(S < 2, 0, median(unlist(df[ctrl.moderator.names[2]]), na.rm = TRUE))
@@ -79,7 +79,7 @@ reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name
     mdrt.low  <- 0
     mdrt.mid  <- 0
     mdrt.high <- 0
-  }else if(!is.null(mdrt_05))
+  }else if(!is.null(mdrt_quantile_05))
   {
     mod.name  <- rownames(reg.result)[mdrt.r]
     mdrt.low  <- quantile(unlist(df[mod.name]), probs=mdrt_quantile_05, na.rm=TRUE)
@@ -108,7 +108,7 @@ reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name
     scale_x_continuous(limits=c(min.x, max.x), xlab) +
     scale_y_continuous(limits=c(y.low.lim, y.hi.lim), ylab) 
   
-  if(is.null(mdrt.50.name)){
+  if(is.null(mdrt.mid.name)){
     if(by_color==FALSE){
       p <- p + stat_function(fun=fit.low,  aes(linetype = mdrt.low.name)) +
         stat_function(fun=fit.high, aes(linetype = mdrt.high.name)) +
