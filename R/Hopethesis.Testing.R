@@ -1,5 +1,5 @@
 # significance of slope (Aug 13th)
-# testing restriction: (specifically, the sig. of beta_x under the moderation of z1, with or without multiple additional interactions)
+# testing restriction: (the sig. of beta_x under the moderation of z1, with or without multiple additional interactions)
 slope.sig_after.mod <- function(m, model, mod_name, mod.n.sd = 1, full.data){
   # m <- m2 # m is the regression result
   # mod_name <- "post.StrFoc" # moderator name in model
@@ -36,3 +36,19 @@ slope.sig_after.mod <- function(m, model, mod_name, mod.n.sd = 1, full.data){
   names(result) <- c("high_level", "low_level")
   return(result)
 }
+
+# testing equality of two coefficients (Wald test)
+coef.equality.sig = function(model, var1.name, var2.name){
+  
+  betas <- coef(model)
+  (beta_var1 <- betas[stringr::str_detect(names(betas), pattern = var1.name)][1])
+  (beta_var2 <- betas[stringr::str_detect(names(betas), pattern = var2.name)][1])
+  dif <- as.numeric( beta_var1 - beta_var2 )
+  
+  v <- vcov(model)
+  v.var1.p <- which(stringr::str_detect(row.names(v), pattern = var1.name))[1]
+  v.var2.p <- which(stringr::str_detect(row.names(v), pattern = var2.name))[1]
+  dif.se <- as.numeric( sqrt( v[v.var1.p, v.var1.p] + v[v.var2.p, v.var2.p] - 2*v[v.var1.p, v.var2.p] ) )
+  p.norm <- 2*(1 - pnorm(abs(dif/dif.se)))
+  names(p.norm) <- "p.norm"
+  return(p.norm)}

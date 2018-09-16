@@ -27,6 +27,11 @@ mod.compare <- function(model1, model2, model3=NULL, model4=NULL, model5=NULL, m
   non_empty <- 10 - sum(unlist(purrr::map(list_all, is.null)))
   model_list <- list_all[1:non_empty]
   
+  if(likelihood.only == TRUE){
+    compare.df <- c("LogLikihood", round(unlist(purrr::map(model_list, logLik)), round.digit))
+  }else
+  {
+  
   n <- non_empty
   compare <- if(n==2){
     suppressWarnings(suppressMessages(anova(model1,model2)))}else if(n==3){
@@ -39,10 +44,6 @@ mod.compare <- function(model1, model2, model3=NULL, model4=NULL, model5=NULL, m
                   suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9)))}else if(n==10){
                     suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10)))}
   
-  if(likelihood.only == TRUE){
-    compare.df <- c("LogLikihood", round(unlist(purrr::map(model_list, logLik)), round.digit))
-  }else
-  {
     if(!is.null(main.effect.only)){
       for(i in main.effect.only){
         compare[i,] <- anova(model_list[[main.effect.only[1]-2]], model_list[[i]])[2,]
@@ -56,7 +57,6 @@ mod.compare <- function(model1, model2, model3=NULL, model4=NULL, model5=NULL, m
         }
       }
     }
-  }
   
   ch          <- function(x){as.character(x)}
   convert.sig <- function(df){ifelse(df<0.001,"***",ifelse(df<0.01,"**",ifelse(df<0.05,"*",ifelse(df<0.1,"†",""))))}
@@ -83,7 +83,7 @@ mod.compare <- function(model1, model2, model3=NULL, model4=NULL, model5=NULL, m
   
   compare.df[nrow(compare.df),1] <- ""
   compare.df <- data.frame(Variables=row.names(compare.df),compare.df) 
-  
+  }
   names(compare.df) <- c("Variables", paste0("Model ", 0:(non_empty-1))) 
   return(compare.df)
 }

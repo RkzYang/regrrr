@@ -43,7 +43,7 @@ format.reg.table.survival <- function(df, d=d){
 suppressWarnings(warning("format.reg.table"))
 
 format.reg.table <- function(df, d=3){
-  test <- cbind(var=rownames(df),df[,c(1:3,6)])
+  test <- cbind(var=rownames(df), df[,c(1:3, ncol(df))])
   digits <- function(x,d){ if(class(x)=="numeric") {formatC(x, format = "f", digits = d)} else{x} }
   test <- data.frame(purrr::map(test,digits,d)) %>% tidyr::unite(Estimate,3,5,sep="")
   test[,4]  <- paste0("(",test[,4],")",sep="")
