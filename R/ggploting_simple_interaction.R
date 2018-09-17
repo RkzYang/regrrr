@@ -12,6 +12,14 @@ reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name
   reg.result <- as.data.frame(reg.result)
   df <- as.data.frame(df)
   
+  # 0.1 dummify the df when the model estimated the fixed effects of factor variables
+  factor.var.p <- which(stringr::str_detect(names(df), "factor"))
+  if(factor.var.p > 0){
+    df <- data.frame(spatstat::dummify(df))
+    df <- df[,-factor.var.p] # deleted the base-line level dummy
+    names(df)[stringr::str_detect(names(df), "factor")] <- rownames(reg.result)[stringr::str_detect(rownames(reg.result), "factor")]
+  }
+  
   # 1.1 the beta values of interested variables
   beta.vec <- reg.result[,2]
   b.main <- beta.vec[main1.r]
@@ -48,7 +56,7 @@ reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name
   b.othr.vec <- beta.vec[other.control] 
   
   # 2.1 holding other terms (excluding ctrl moderators and ctrl interactions) to median/mean
-  intercept.position <- ifelse(stringr::str_detect(row.names(reg.result)[1], pattern = "ntercept"), 1, length(other.control)+1 )
+  intercept.position <- ifelse(stringr::str_detect(row.names(reg.result)[1], pattern = "ntercept"), 1, length(other.control)+1 ) # length(other.control)+1 is out of boundary, which won't affect selection
   otherterms <- df[row.names(reg.result)[other.control[-intercept.position]]] %>% as.matrix()
   otherTermMedians <- if(!is.null(mdrt_quantile_05)){robustbase::colMedians(otherterms, na.rm = TRUE)}else{colMeans(otherterms, na.rm = TRUE)}
   b.intercept <- ifelse(intercept.position > 0, b.othr.vec[intercept.position], 0)
@@ -130,7 +138,7 @@ reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name
       p <- p +  stat_function(fun=fit.low,  aes(linetype = mdrt.low.name)) +
         stat_function(fun=fit.mid,  aes(linetype = mdrt.mid.name)) +
         stat_function(fun=fit.high, aes(linetype = mdrt.high.name)) + 
-        scale_linetype_manual(moderator.lab, values=c("solid", "dotted", "dotted"))
+        scale_linetype_manual(moderator.lab, values=c("solid", "dashed", "dotted"))
     }else{
       p <- p +  stat_function(fun=fit.low,  aes(linetype = mdrt.low.name)) +
         stat_function(fun=fit.mid,  aes(linetype = mdrt.mid.name)) +

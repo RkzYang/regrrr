@@ -1,0 +1,120 @@
+# plotting the interaction, with or without multiple interactions, FROM model prediction
+
+reg.gg.from.model <- function(reg.result, df, model.for.predict, by_color=FALSE, x_var.name = NULL, y_var.name = NULL, 
+                              main1.r, mdrt.r=NULL, int1.r=NULL,
+                              min_x=0.001, max_x=0.999, 
+                              mdrt_quantile_05=NULL, mdrt_quantile_50=NULL, mdrt_quantile_95=NULL, 
+                              mod.n.sd=NULL,
+                              title=NULL, xlab="X_Var.name", ylab="Y_Var.name", moderator.lab="Moderator_name",
+                              mdrt.low.name="Low", mdrt.mid.name=NULL, mdrt.high.name="High",
+                              y.hi.lim=NULL, y.low.lim=NULL){
+  
+  reg.result <- as.data.frame(reg.result)
+  df <- as.data.frame(df)
+  
+  factor.names <- rownames(reg.result)[stringr::str_detect(rownames(reg.result), pattern = "factor")]
+  factor.name <- stringr::str_extract(factor.names, pattern = "(?<=\\().*?(?=\\))")[1]
+  factor.levels <- levels(as.factor(df[,factor.name]))
+  
+  non.factor.names <- names(df)[names(df) %in% rownames(reg.result)]
+  df <- df[ , non.factor.names]
+  
+  # 1 the beta values of interested variables
+  beta.vec <- reg.result[,2]
+  b.main <- beta.vec[main1.r]
+  b.mdrt <- beta.vec[mdrt.r]
+  
+  # 2 set moderator levels (low, mid, high)
+  if(is.null(mdrt.r)){
+    mdrt.low  <- 0
+    mdrt.mid  <- 0
+    mdrt.high <- 0
+  }else if(!is.null(mdrt_quantile_05))
+  {
+    mod.name  <- rownames(reg.result)[mdrt.r]
+    mdrt.low  <- quantile(unlist(df[mod.name]), probs=mdrt_quantile_05, na.rm=TRUE)
+    mdrt.mid  <- quantile(unlist(df[mod.name]), probs=mdrt_quantile_50, na.rm=TRUE)
+    mdrt.high <- quantile(unlist(df[mod.name]), probs=mdrt_quantile_95, na.rm=TRUE)
+  }else{
+    mod.name  <- rownames(reg.result)[mdrt.r]
+    mdrt.low  <- mean(unlist(df[mod.name]), na.rm=TRUE) - mod.n.sd*sd(unlist(df[mod.name]), na.rm=TRUE)
+    mdrt.mid  <- mean(unlist(df[mod.name]), na.rm=TRUE) 
+    mdrt.high <- mean(unlist(df[mod.name]), na.rm=TRUE) + mod.n.sd*sd(unlist(df[mod.name]), na.rm=TRUE)
+  }
+  
+  # 3 adjust the margin of x axis
+  min.x <- quantile(unlist(df[rownames(reg.result)[main1.r]]), probs=min_x, rm.na=TRUE) %>% as.numeric()
+  max.x <- quantile(unlist(df[rownames(reg.result)[main1.r]]), probs=max_x, rm.na=TRUE) %>% as.numeric()
+  
+  # 4 make a fake data (all other variables other than x and moderator are held to median or mean) set for plotting
+  main.x.name <- rownames(reg.result)[main1.r]
+  modrtr.name <- rownames(reg.result)[mdrt.r]
+  
+  df.other.var <- df[, names(df)[! names(df) %in% c(main.x.name, modrtr.name, factor.name)]]
+  
+  if(!is.null(mdrt_quantile_05))
+  {
+    df.fake.other.var <- data.frame(t(replicate(150, robustbase::colMedians(as.matrix(df.other.var), na.rm = TRUE))))
+  }else{
+    df.fake.other.var <- data.frame(t(replicate(150, colMeans(df.other.var, na.rm = TRUE))))
+  }
+  
+  if(!is.null(mdrt.mid.name)){
+    df.fake <- data.frame(x = rep(seq(min.x, max.x, length=50), 3), 
+                          mod = rep(c(mdrt.low, mdrt.mid, mdrt.high), each=50), 
+                          factor1 = factor.levels[length(factor.levels)], 
+                          mod.level = rep(c(mdrt.low.name, mdrt.mid.name, mdrt.high.name), each=50),
+                          df.fake.other.var)
+  }else{
+    df.fake <- data.frame(x = rep(seq(min.x, max.x, length=50), 2), 
+                          mod = rep(c(mdrt.low, mdrt.high), each=50), 
+                          factor1 = factor.levels[length(factor.levels)], 
+                          mod.level = rep(c(mdrt.low.name, mdrt.high.name), each=50),
+                          df.fake.other.var[1:100,])
+  }
+  
+  names(df.fake)[1:3] <- c(main.x.name, modrtr.name, factor.name)
+  df.fake$y_hat <- predict(model.for.predict, df.fake, type = "response")
+  names(df.fake)[length(names(df.fake))] <- y_var.name
+  
+  # 5 plot
+  library(ggplot2)    
+  library(extrafont)
+  library(ggthemes)
+  
+  if(by_color == FALSE){
+    p <-  ggplot(df.fake, aes_string(x=x_var.name, y=y_var.name)) +
+      geom_line(aes(linetype = mod.level)) +
+      scale_x_continuous(limits=c(min.x, max.x), xlab) +
+      scale_y_continuous(limits=c(y.low.lim, y.hi.lim), ylab)
+    
+    if(!is.null(mdrt.mid.name)){
+      p <- p + scale_linetype_manual(moderator.lab, values=c("solid", "dashed", "dotted"))
+    }else{
+      p <- p + scale_linetype_manual(moderator.lab, values=c("solid", "dotted"))
+    }
+    
+  }else{
+    p <-  ggplot(df.fake, aes_string(x=x_var.name, y=y_var.name)) +
+      geom_line(aes(color = mod.level)) +
+      scale_x_continuous(limits=c(min.x, max.x), xlab) +
+      scale_y_continuous(limits=c(y.low.lim, y.hi.lim), ylab)
+    
+    if(!is.null(mdrt.mid.name)){
+      p <- p + scale_colour_manual(moderator.lab, values = c("red", "blue", "black"))
+    }else{
+      p <- p + scale_colour_manual(moderator.lab, values = c("red", "black"))
+    }
+    
+  }
+  
+  # customize #
+  p <- p + theme_light() + 
+    theme(text=element_text(family="Times New Roman", size=16)) +
+    theme(legend.position="bottom")
+  
+  if(!is.null(title)){
+    p + ggtitle(title) 
+  }
+  p
+}
