@@ -5,12 +5,13 @@ reg.Vif <- function(model_df){
 
 # quickly check the complete correlaiton matrix, or the correlation between a variable X and all other vars #
 # can be useful for finding instrument #
-reg.Cor <- function(model_df, X_name = NULL){
-  cor.matrix <- round(cor(model_df[,which(sapply(model_df, class) %in% c("numeric","integer","AsIs"))]),3)
+reg.Cor <- function(model_df, var_name_select = NULL, d = 3){
+  cor.matrix <- round(cor(model_df[,which(sapply(model_df, class) %in% c("numeric","integer","AsIs"))]), d)
   if(is.null(X_name)){
     result <- cor.matrix
   }else{
-    result <- cor.matrix[which(row.names(cor.matrix)==X_name),]
+    seleted <- which(row.names(cor.matrix) %in% var_name_select)
+    result <- cor.matrix[seleted, seleted]
   }
   return(result)
 }
