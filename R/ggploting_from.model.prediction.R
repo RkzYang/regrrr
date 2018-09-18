@@ -14,7 +14,7 @@ reg.gg.from.model <- function(reg.result, df, model.for.predict, by_color=FALSE,
   
   factor.names <- rownames(reg.result)[stringr::str_detect(rownames(reg.result), pattern = "factor")]
   factor.name <- stringr::str_extract(factor.names, pattern = "(?<=\\().*?(?=\\))")[1]
-  factor.levels <- levels(as.factor(df[,factor.name]))
+  if(!is.na(factor.name)){factor.levels <- levels(as.factor(df[,factor.name]))}
   
   non.factor.names <- names(df)[names(df) %in% rownames(reg.result)]
   df <- df[ , non.factor.names]

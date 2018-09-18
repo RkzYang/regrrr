@@ -14,7 +14,7 @@ reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name
   
   # 0.1 dummify the df when the model estimated the fixed effects of factor variables
   factor.var.p <- which(stringr::str_detect(names(df), "factor"))
-  if(factor.var.p > 0){
+  if(length(factor.var.p) > 0){
     df <- data.frame(spatstat::dummify(df))
     df <- df[,-factor.var.p] # deleted the base-line level dummy
     names(df)[stringr::str_detect(names(df), "factor")] <- rownames(reg.result)[stringr::str_detect(rownames(reg.result), "factor")]
