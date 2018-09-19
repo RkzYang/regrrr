@@ -33,7 +33,7 @@ reg.gg.from.model <- function(reg.result, df, model.for.predict, by_color=FALSE,
   {
     mod.name  <- rownames(reg.result)[mdrt.r]
     mdrt.low  <- quantile(unlist(df[mod.name]), probs=mdrt_quantile_05, na.rm=TRUE)
-    mdrt.mid  <- quantile(unlist(df[mod.name]), probs=mdrt_quantile_50, na.rm=TRUE)
+    if(!is.null(mdrt_quantile_50)){mdrt.mid  <- quantile(unlist(df[mod.name]), probs=mdrt_quantile_50, na.rm=TRUE)}
     mdrt.high <- quantile(unlist(df[mod.name]), probs=mdrt_quantile_95, na.rm=TRUE)
   }else{
     mod.name  <- rownames(reg.result)[mdrt.r]

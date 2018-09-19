@@ -38,14 +38,16 @@ slope.sig_after.mod <- function(m, model, mod_name, mod.n.sd = 1, full.data){
 }
 
 # testing equality of two coefficients (Wald test)
-coef.equality.sig = function(model, var1.name, var2.name){
+coef.equality.sig = function(model, var1.name, var2.name, v = NULL){
   
   betas <- coef(model)
   (beta_var1 <- betas[stringr::str_detect(names(betas), pattern = var1.name)][1])
   (beta_var2 <- betas[stringr::str_detect(names(betas), pattern = var2.name)][1])
   dif <- as.numeric( beta_var1 - beta_var2 )
   
-  v <- vcov(model)
+  if(is.null(v)){
+    v <- vcov(model)  
+  }
   v.var1.p <- which(stringr::str_detect(row.names(v), pattern = var1.name))[1]
   v.var2.p <- which(stringr::str_detect(row.names(v), pattern = var2.name))[1]
   dif.se <- as.numeric( sqrt( v[v.var1.p, v.var1.p] + v[v.var2.p, v.var2.p] - 2*v[v.var1.p, v.var2.p] ) )
