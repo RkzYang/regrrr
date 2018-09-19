@@ -60,20 +60,37 @@ reg.gg.from.model <- function(reg.result, df, model.for.predict, by_color=FALSE,
   }
   
   if(!is.null(mdrt.mid.name)){
-    df.fake <- data.frame(x = rep(seq(min.x, max.x, length=50), 3), 
-                          mod = rep(c(mdrt.low, mdrt.mid, mdrt.high), each=50), 
-                          factor1 = factor.levels[length(factor.levels)], 
-                          mod.level = rep(c(mdrt.low.name, mdrt.mid.name, mdrt.high.name), each=50),
-                          df.fake.other.var)
+    if(!is.na(factor.name)){
+      df.fake <- data.frame(x = rep(seq(min.x, max.x, length=50), 3), 
+                            mod = rep(c(mdrt.low, mdrt.mid, mdrt.high), each=50), 
+                            factor1 = factor.levels[length(factor.levels)], 
+                            mod.level = rep(c(mdrt.low.name, mdrt.mid.name, mdrt.high.name), each=50),
+                            df.fake.other.var)
+      names(df.fake)[1:3] <- c(main.x.name, modrtr.name, factor.name)
+    }else{
+      df.fake <- data.frame(x = rep(seq(min.x, max.x, length=50), 3), 
+                            mod = rep(c(mdrt.low, mdrt.mid, mdrt.high), each=50), 
+                            mod.level = rep(c(mdrt.low.name, mdrt.mid.name, mdrt.high.name), each=50),
+                            df.fake.other.var)
+      names(df.fake)[1:2] <- c(main.x.name, modrtr.name)  
+    }
   }else{
-    df.fake <- data.frame(x = rep(seq(min.x, max.x, length=50), 2), 
-                          mod = rep(c(mdrt.low, mdrt.high), each=50), 
-                          factor1 = factor.levels[length(factor.levels)], 
-                          mod.level = rep(c(mdrt.low.name, mdrt.high.name), each=50),
-                          df.fake.other.var[1:100,])
+    if(!is.na(factor.name)){
+      df.fake <- data.frame(x = rep(seq(min.x, max.x, length=50), 2), 
+                            mod = rep(c(mdrt.low, mdrt.high), each=50), 
+                            factor1 = factor.levels[length(factor.levels)], 
+                            mod.level = rep(c(mdrt.low.name, mdrt.high.name), each=50),
+                            df.fake.other.var[1:100,])
+      names(df.fake)[1:3] <- c(main.x.name, modrtr.name, factor.name)
+    }else{
+      df.fake <- data.frame(x = rep(seq(min.x, max.x, length=50), 2), 
+                            mod = rep(c(mdrt.low, mdrt.high), each=50),
+                            mod.level = rep(c(mdrt.low.name, mdrt.high.name), each=50),
+                            df.fake.other.var[1:100,])
+      names(df.fake)[1:2] <- c(main.x.name, modrtr.name)  
+    }
   }
   
-  names(df.fake)[1:3] <- c(main.x.name, modrtr.name, factor.name)
   df.fake$y_hat <- predict(model.for.predict, df.fake, type = "response")
   names(df.fake)[length(names(df.fake))] <- y_var.name
   
