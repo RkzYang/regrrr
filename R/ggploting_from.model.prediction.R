@@ -9,7 +9,8 @@ reg.gg.from.model <- function(reg.result, df, model.for.predict, by_color=FALSE,
                               mdrt.low.name="Low", mdrt.mid.name=NULL, mdrt.high.name="High",
                               y.hi.lim=NULL, y.low.lim=NULL){
   
-  reg.result <- as.data.frame(reg.result)
+  tryCatch({reg.result <- as.data.frame(reg.result)}, error=function(e){cat("ERROR :", conditionMessage(e), "\n")})
+  
   df <- as.data.frame(df)
   
   factor.names <- rownames(reg.result)[stringr::str_detect(rownames(reg.result), pattern = "factor")]

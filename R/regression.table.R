@@ -28,7 +28,7 @@ mod.compare <- function(model1, model2, model3=NULL, model4=NULL, model5=NULL, m
   model_list <- list_all[1:non_empty]
   
   if(likelihood.only == TRUE){
-    compare.df <- c("LogLikihood", round(unlist(purrr::map(model_list, logLik)), round.digit))
+    compare.df <- c("LogLikelihood", round(unlist(purrr::map(model_list, logLik)), round.digit))
   }else
   {
   
