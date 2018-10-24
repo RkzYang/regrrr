@@ -1,7 +1,23 @@
+#' Convert a regression result into a clean data.frame
+#'
+#' @param df a data.frame of regression result
+#' @export
 reg.table <- function(lm.obj, ...){
   return(summary(lm.obj) %>% coef %>% as.data.frame %>% add.p.z %>% add.sig)}
 
-# updated 9/2/2018 #
+#' Combine regression results from different models by columns # updated 9/2/2018 #
+#'
+#' @param tbl_1  the 1st  data.frame of regression result
+#' @param tbl_2  the 2nd  data.frame of regression result
+#' @param tbl_3  the 3rd  data.frame of regression result
+#' @param tbl_4  the 4th  data.frame of regression result
+#' @param tbl_5  the 5th  data.frame of regression result
+#' @param tbl_6  the 6th  data.frame of regression result
+#' @param tbl_7  the 7th  data.frame of regression result
+#' @param tbl_8  the 8th  data.frame of regression result
+#' @param tbl_9  the 9th  data.frame of regression result
+#' @param tbl_10 the 10th data.frame of regression result
+#' @export
 reg.combine <- function(tbl_1, tbl_2, tbl_3=NULL, tbl_4=NULL, tbl_5=NULL, tbl_6=NULL, tbl_7=NULL, tbl_8=NULL, tbl_9=NULL, tbl_10=NULL) {
   all_tbls <- list(tbl_1,tbl_2,tbl_3,tbl_4,tbl_5,tbl_6,tbl_7,tbl_8,tbl_9,tbl_10)
   non_empty <- 10 - sum(unlist(purrr::map(all_tbls, is.null)))
@@ -17,7 +33,24 @@ reg.combine <- function(tbl_1, tbl_2, tbl_3=NULL, tbl_4=NULL, tbl_5=NULL, tbl_6=
   names(main.table) <- c("Variables", paste0("Model ", 0:(non_empty-1))) 
   return(main.table)}
 
-# updated 9/13/2018 #
+
+#' Compare regression models, which is compatiable with the reg.table output # updated 9/13/2018 #
+#'
+#' @param model1  the 1st  regression model
+#' @param model2  the 2nd  regression model
+#' @param model3  the 3rd  regression model
+#' @param model4  the 4th  regression model
+#' @param model5  the 5th  regression model
+#' @param model6  the 6th  regression model
+#' @param model7  the 7th  regression model
+#' @param model8  the 8th  regression model
+#' @param model9  the 9th  regression model
+#' @param model10 the 10th regression model
+#' @param likelihood.only whether or not to output the likelihood
+#' @param round.digit number of decimal places to retain
+#' @param main.effect.only specify col number of alternative main-effect models, if any
+#' @param intn.effect.only specify col number of alternative moderator models, if any
+#' @export
 mod.compare <- function(model1, model2, model3=NULL, model4=NULL, model5=NULL, model6=NULL, model7=NULL, model8=NULL, model9=NULL, model10=NULL,
                         likelihood.only = FALSE, round.digit = 3, 
                         main.effect.only = NULL,
