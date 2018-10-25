@@ -1,5 +1,31 @@
-# plotting the interaction, with or without multiple interactions, FROM model prediction
-
+#' plotting the interaction, with or without multiple interactions, FROM the model prediction
+#' by creating a hypothetical dataset 
+#' 
+#' @param reg.result a data.frame of regression result
+#' @param df the data used in regression
+#' @param model.for.predict the model object, such as a "lm" object
+#' @param by_color plot interactions by colors, otherwise by line types
+#' @param x_var.name x name in the regression model, a string
+#' @param y_var.name y name in the regression model, a string
+#' @param main1.r the row number of the main effect, in reg.result
+#' @param mdrt.r the row number of the moderater, in reg.result
+#' @param int1.r the row number of the interaction, in reg.result
+#' @param min_x the min of x scale, in percentile of x
+#' @param max_x the max of x scale, in percentile of x
+#' @param mdrt_quantile_05 set the low level of moderator, in percentile
+#' @param mdrt_quantile_50 set the middle level of moderator, in percentile
+#' @param mdrt_quantile_50 set the high level of moderator, in percentile
+#' @param mod.n.sd set the moderating strength, in the number of s.d. units, which can take negative values
+#' @param title the title of the plot
+#' @param xlab label of X
+#' @param ylab label of Y
+#' @param moderator.lab label of moderator
+#' @param mdrt.low.name the label of low-level moderator
+#' @param mdrt.mid.name the label of mid-level moderator
+#' @param mdrt.high.name the label of high-level moderator
+#' @param y.hi.lim specify the upper limit of y
+#' @param y.low.lim specify the lower limit of y
+#' @export
 reg.gg.from.model <- function(reg.result, df, model.for.predict, by_color=FALSE, x_var.name = NULL, y_var.name = NULL, 
                               main1.r, mdrt.r=NULL, int1.r=NULL,
                               min_x=0.001, max_x=0.999, 

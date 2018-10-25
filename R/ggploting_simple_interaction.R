@@ -1,5 +1,29 @@
-# plotting the interaction, with or without multiple interactions
-
+#' plotting the interaction, with or without multiple interaction terms
+#'
+#' @param reg.result a data.frame of regression result
+#' @param df the data used in regression
+#' @param by_color plot interactions by colors, otherwise by line types
+#' @param x_var.name x name in the regression model, a string
+#' @param y_var.name y name in the regression model, a string
+#' @param main1.r the row number of the main effect, in reg.result
+#' @param mdrt.r the row number of the moderater, in reg.result
+#' @param int1.r the row number of the interaction, in reg.result
+#' @param min_x the min of x scale, in percentile of x
+#' @param max_x the max of x scale, in percentile of x
+#' @param mdrt_quantile_05 set the low level of moderator, in percentile
+#' @param mdrt_quantile_50 set the middle level of moderator, in percentile
+#' @param mdrt_quantile_50 set the high level of moderator, in percentile
+#' @param mod.n.sd set the moderating strength, in the number of s.d. units, which can take negative values
+#' @param title the title of the plot
+#' @param xlab label of X
+#' @param ylab label of Y
+#' @param moderator.lab label of moderator
+#' @param mdrt.low.name the label of low-level moderator
+#' @param mdrt.mid.name the label of mid-level moderator
+#' @param mdrt.high.name the label of high-level moderator
+#' @param y.hi.lim specify the upper limit of y
+#' @param y.low.lim specify the lower limit of y
+#' @export
 reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name = NULL, 
                    main1.r, mdrt.r=NULL, int1.r=NULL,
                    min_x=0.001, max_x=0.999, 
@@ -7,7 +31,7 @@ reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name
                    mod.n.sd=NULL,
                    title=NULL, xlab="X_Var.name", ylab="Y_Var.name", moderator.lab="Moderator_name",
                    mdrt.low.name="Low", mdrt.mid.name=NULL, mdrt.high.name="High",
-                   y.hi.lim=NULL,y.low.lim=NULL){
+                   y.hi.lim=NULL, y.low.lim=NULL){
   
   reg.result <- as.data.frame(reg.result)
   df <- as.data.frame(df)

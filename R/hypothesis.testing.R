@@ -1,5 +1,12 @@
-# significance of slope (Aug 13th)
-# testing restriction: (the sig. of beta_x under the moderation of z1, with or without multiple additional interactions)
+#' significance of slope under moderation
+#' testing restriction: the sig. of beta_x under the moderation of z1, with or without additional interaction terms, Aug 13th
+#'
+#' @param m a data.frame of regression result
+#' @param model the model object, such as a "lm" object
+#' @param mod_name moderator name in model, a string
+#' @param mod.n.sd specify the strength of the moderating effects, in the unit of s.d.s of the moderator, which can take negative values
+#' @param full.data data used for regression
+#' @export
 slope.sig_after.mod <- function(m, model, mod_name, mod.n.sd = 1, full.data){
   # m <- m2 # m is the regression result
   # mod_name <- "post.StrFoc" # moderator name in model
@@ -37,7 +44,13 @@ slope.sig_after.mod <- function(m, model, mod_name, mod.n.sd = 1, full.data){
   return(result)
 }
 
-# testing equality of two coefficients (Wald test)
+#' testing equality of two coefficients, a Wald test
+#'
+#' @param model the model object, such as a "lm" object
+#' @param var1.name X1 name in model, a string
+#' @param var2.name X2 name in model, a string
+#' @param v a customized variance-covariance matrix
+#' @export
 coef.equality.sig = function(model, var1.name, var2.name, v = NULL){
   
   betas <- coef(model)
