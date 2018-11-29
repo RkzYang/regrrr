@@ -1,8 +1,8 @@
 #' Convert a regression result into a clean data.frame
 #'
-#' @param df a data.frame of regression result
+#' @param lm.obj a regression result object
 #' @export
-reg.table <- function(lm.obj, ...){
+reg.table <- function(lm.obj){
   return(summary(lm.obj) %>% coef %>% as.data.frame %>% add.p.z %>% add.sig)}
 
 #' Combine regression results from different models by columns # updated 9/2/2018 #

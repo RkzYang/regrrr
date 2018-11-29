@@ -14,7 +14,7 @@
 #' @param max_x the max of x scale, in percentile of x
 #' @param mdrt_quantile_05 set the low level of moderator, in percentile
 #' @param mdrt_quantile_50 set the middle level of moderator, in percentile
-#' @param mdrt_quantile_50 set the high level of moderator, in percentile
+#' @param mdrt_quantile_95 set the high level of moderator, in percentile
 #' @param mod.n.sd set the moderating strength, in the number of s.d. units, which can take negative values
 #' @param title the title of the plot
 #' @param xlab label of X

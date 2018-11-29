@@ -1,13 +1,13 @@
 Package: regrrr
 Type: Package
-Title: Compiling and Plotting Regression Results
+Title: Compiling, Testing, Plotting Regression Results
 Version: 0.1.0
-Author: R.K. Yang
+Author: R.K. Yang; Luyao Peng
 Maintainer: R.K. Yang <rkzyang@gmail.com>
-Description: Compiling Regression Results for Management Journals.
-    Compiling Regression Results to Tables.
-    Plotting Regression Results to Graphs.
-License: What license is it under?
+Description: Compiling Regression Results for Management Journals. Compiling Regression Results to Tables. Plotting Regression Results to Graphs.
+License:  GPL-3 
 Encoding: UTF-8
 LazyData: true
 Suggests: testthat
+RoxygenNote: 6.0.1
+Imports: dplyr, purrr, tidyr, ggplot2, extrafont, ggthemes

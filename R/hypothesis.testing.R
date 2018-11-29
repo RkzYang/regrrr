@@ -51,7 +51,7 @@ slope.sig_after.mod <- function(m, model, mod_name, mod.n.sd = 1, full.data){
 #' @param var2.name X2 name in model, a string
 #' @param v a customized variance-covariance matrix
 #' @export
-coef.equality.sig = function(model, var1.name, var2.name, v = NULL){
+coef_equality = function(model, var1.name, var2.name, v = NULL){
   
   betas <- coef(model)
   (beta_var1 <- betas[stringr::str_detect(names(betas), pattern = var1.name)][1])

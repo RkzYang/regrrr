@@ -57,7 +57,7 @@ add.sig <- function(df, Pr.col = 5){data.frame(df,sig=ifelse(df[,Pr.col]<0.001,"
 #' @import tidyr
 #' 
 #' @export
-format.reg.table <- function(df, d=3){
+format_reg.table <- function(df, d = 3){
   test <- cbind(var=rownames(df), df[,c(1:3, ncol(df))])
   digits <- function(x,d){ if(class(x)=="numeric") {formatC(x, format = "f", digits = d)} else{x} }
   test <- data.frame(purrr::map(test, digits, d)) %>% tidyr::unite(Estimate, 3, 5, sep="")
