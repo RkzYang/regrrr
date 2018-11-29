@@ -6,8 +6,8 @@ reg.Vif <- function(model_df){
   usdm::vif(model_df[,which(sapply(model_df, class) %in% c("numeric","integer","AsIs"))][,-1])
 }
 
-#' quickly check correlaiton matrix, or the correlation between a particular X and all other vars 
-#' can be useful for looking for relavant instrument
+#' quickly check correlation matrix, or the correlation between a particular X and all other vars 
+#' can be useful for looking for relevant instrument
 #'
 #' @param model_df a data.frame used in regression model
 #' @param var_name_select to specify the variable names to be included in the table, default is NULL--all variables are included

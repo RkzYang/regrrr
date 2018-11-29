@@ -34,7 +34,7 @@ reg.combine <- function(tbl_1, tbl_2, tbl_3=NULL, tbl_4=NULL, tbl_5=NULL, tbl_6=
   return(main.table)}
 
 
-#' Compare regression models, which is compatiable with the reg.table output # updated 9/13/2018 #
+#' Compare regression models, which is compatible with the reg.table output # updated 9/13/2018 #
 #'
 #' @param model1  the 1st  regression model
 #' @param model2  the 2nd  regression model

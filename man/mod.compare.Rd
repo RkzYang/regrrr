@@ -2,7 +2,7 @@
 % Please edit documentation in R/regression.table.R
 \name{mod.compare}
 \alias{mod.compare}
-\title{Compare regression models, which is compatiable with the reg.table output # updated 9/13/2018 #}
+\title{Compare regression models, which is compatible with the reg.table output # updated 9/13/2018 #}
 \usage{
 mod.compare(model1, model2, model3 = NULL, model4 = NULL, model5 = NULL,
   model6 = NULL, model7 = NULL, model8 = NULL, model9 = NULL,
@@ -39,5 +39,5 @@ mod.compare(model1, model2, model3 = NULL, model4 = NULL, model5 = NULL,
 \item{intn.effect.only}{specify col number of alternative moderator models, if any}
 }
 \description{
-Compare regression models, which is compatiable with the reg.table output # updated 9/13/2018 #
+Compare regression models, which is compatible with the reg.table output # updated 9/13/2018 #
 }

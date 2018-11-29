@@ -2,8 +2,8 @@
 % Please edit documentation in R/fast.check.R
 \name{reg.Cor}
 \alias{reg.Cor}
-\title{quickly check correlaiton matrix, or the correlation between a particular X and all other vars 
-can be useful for looking for relavant instrument}
+\title{quickly check correlation matrix, or the correlation between a particular X and all other vars 
+can be useful for looking for relevant instrument}
 \usage{
 reg.Cor(model_df, var_name_select = NULL, d = 3)
 }
@@ -15,6 +15,6 @@ reg.Cor(model_df, var_name_select = NULL, d = 3)
 \item{d}{number of digits retained after the decimal point}
 }
 \description{
-quickly check correlaiton matrix, or the correlation between a particular X and all other vars 
-can be useful for looking for relavant instrument
+quickly check correlation matrix, or the correlation between a particular X and all other vars 
+can be useful for looking for relevant instrument
 }
