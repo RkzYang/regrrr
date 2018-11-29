@@ -20,4 +20,3 @@ Imports: stats,
          stringr,
          spatstat,
          MuMIn
- 
