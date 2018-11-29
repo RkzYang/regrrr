@@ -2,18 +2,22 @@
 #' testing restriction: the sig. of beta_x under the moderation of z1, with or without additional interaction terms, Aug 13th
 #'
 #' @param m a data.frame of regression result
+#' @param all.vcv the complete variance-covariance matrix
 #' @param model the model object, such as a "lm" object
 #' @param mod_name moderator name in model, a string
 #' @param mod.n.sd specify the strength of the moderating effects, in the unit of s.d.s of the moderator, which can take negative values
 #' @param full.data data used for regression
+#' @importFrom stats pt
+#' @import purrr
+#' @import stringr
 #' @export
-slope.sig_after.mod <- function(m, model, mod_name, mod.n.sd = 1, full.data){
+slope.sig_after.mod <- function(m, all.vcv, model, mod_name, mod.n.sd = 1, full.data){
   # m <- m2 # m is the regression result
   # mod_name <- "post.StrFoc" # moderator name in model
   # model <- H.01 # original model (such as a "lm" object)
   # full.data <- Event.CAR # full data set
   # extract vcov among related beta's (of main effect and the interaction terms)
-  all.vcv <- cluster.vcov(model, cbind( Event.CAR$Acquiror.fed_rssd,  Event.CAR$Quarter.Announced))
+  # all.vcv <- cluster.vcov(model, cbind( Event.CAR$Acquiror.fed_rssd,  Event.CAR$Quarter.Announced))
   interaction.names <- row.names(m)[stringr::str_detect(row.names(m), pattern=":")]
   main.name <- stringr::str_split(interaction.names, ":")[[1]][2]
   all.mod.names <- purrr::map(stringr::str_split(interaction.names, ":"), function(x){x[1]}) %>% unlist()
@@ -21,7 +25,7 @@ slope.sig_after.mod <- function(m, model, mod_name, mod.n.sd = 1, full.data){
   focal.interaction.name <- interaction.names[stringr::str_detect(interaction.names, pattern = mod_name)]
   other.interaction.name <- interaction.names[!stringr::str_detect(interaction.names, pattern = mod_name)]
   (related.var.position <- c(which(row.names(m) == main.name), which(row.names(m) == focal.interaction.name), which(row.names(m) %in% other.interaction.name)))
-  betas.vcv <- all.vcv[related.var.position,related.var.position]
+  betas.vcv <- all.vcv[related.var.position, related.var.position]
   # fix the intrested moderator to high and low level
   mod_vec <- unlist(full.data[mod_name])
   mod_high <- mean(mod_vec) + mod.n.sd*sd(mod_vec)
@@ -50,6 +54,8 @@ slope.sig_after.mod <- function(m, model, mod_name, mod.n.sd = 1, full.data){
 #' @param var1.name X1 name in model, a string
 #' @param var2.name X2 name in model, a string
 #' @param v a customized variance-covariance matrix
+#' @importFrom stats pnorm vcov
+#' @import stringr
 #' @export
 coef_equality = function(model, var1.name, var2.name, v = NULL){
   

@@ -1,9 +1,23 @@
 #' Convert a regression result into a clean data.frame
 #'
 #' @param lm.obj a regression result object
+#' @importFrom stats coef
 #' @export
 reg.table <- function(lm.obj){
-  return(summary(lm.obj) %>% coef %>% as.data.frame %>% add.p.z %>% add.sig)}
+  
+  add.p.z <- function(df, z.col = 3, p.already=FALSE){
+    if(p.already==FALSE){
+      data.frame(n.r=1:nrow(df), df, p.z=2 * (1 - pnorm(abs(df[,z.col]))))}else{
+        data.frame(n.r=1:nrow(df), df, p.z=df[,3])
+      }
+  }
+  
+  add.sig <- function(df, Pr.col = 5){data.frame(df, sig=ifelse(df[,Pr.col]<0.001, paste0(rep("\x2a", 3), collapse = ""),
+                                                                ifelse(df[,Pr.col]<0.01, paste0(rep("\x2a", 2), collapse = ""),
+                                                                       ifelse(df[,Pr.col]<0.05, paste0(rep("\x2a", 1), collapse = ""),
+                                                                              ifelse(df[,Pr.col]<0.1,"\xe2\x80\xa0","")))))}
+  
+  return(summary(lm.obj) %>% stats::coef %>% as.data.frame %>% add.p.z %>% add.sig)}
 
 #' Combine regression results from different models by columns # updated 9/2/2018 #
 #'
@@ -17,6 +31,7 @@ reg.table <- function(lm.obj){
 #' @param tbl_8  the 8th  data.frame of regression result
 #' @param tbl_9  the 9th  data.frame of regression result
 #' @param tbl_10 the 10th data.frame of regression result
+#' @import purrr
 #' @export
 reg.combine <- function(tbl_1, tbl_2, tbl_3=NULL, tbl_4=NULL, tbl_5=NULL, tbl_6=NULL, tbl_7=NULL, tbl_8=NULL, tbl_9=NULL, tbl_10=NULL) {
   all_tbls <- list(tbl_1,tbl_2,tbl_3,tbl_4,tbl_5,tbl_6,tbl_7,tbl_8,tbl_9,tbl_10)
@@ -50,6 +65,9 @@ reg.combine <- function(tbl_1, tbl_2, tbl_3=NULL, tbl_4=NULL, tbl_5=NULL, tbl_6=
 #' @param round.digit number of decimal places to retain
 #' @param main.effect.only specify col number of alternative main-effect models, if any
 #' @param intn.effect.only specify col number of alternative moderator models, if any
+#' @importFrom stats anova logLik
+#' @import purrr 
+#' @import MuMIn
 #' @export
 mod.compare <- function(model1, model2, model3=NULL, model4=NULL, model5=NULL, model6=NULL, model7=NULL, model8=NULL, model9=NULL, model10=NULL,
                         likelihood.only = FALSE, round.digit = 3, 
@@ -92,7 +110,10 @@ mod.compare <- function(model1, model2, model3=NULL, model4=NULL, model5=NULL, m
     }
   
   ch          <- function(x){as.character(x)}
-  convert.sig <- function(df){ifelse(df<0.001,"***",ifelse(df<0.01,"**",ifelse(df<0.05,"*",ifelse(df<0.1,"†",""))))}
+  convert.sig <- function(df){ifelse(df<0.001, paste0(rep("\x2a", 3), collapse = ""),
+                                     ifelse(df<0.01, paste0(rep("\x2a", 2), collapse = ""),
+                                            ifelse(df<0.05, paste0(rep("\x2a", 1), collapse = ""),
+                                                   ifelse(df<0.1,"\xe2\x80\xa0",""))))}
   dg          <- function(x)formatC(x, format = "f", digits = 3)
   
   

@@ -5,10 +5,12 @@
 \title{significance of slope under moderation
 testing restriction: the sig. of beta_x under the moderation of z1, with or without additional interaction terms, Aug 13th}
 \usage{
-slope.sig_after.mod(m, model, mod_name, mod.n.sd = 1, full.data)
+slope.sig_after.mod(m, all.vcv, model, mod_name, mod.n.sd = 1, full.data)
 }
 \arguments{
 \item{m}{a data.frame of regression result}
+
+\item{all.vcv}{the complete variance-covariance matrix}
 
 \item{model}{the model object, such as a "lm" object}
 

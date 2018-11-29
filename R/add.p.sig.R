@@ -1,4 +1,3 @@
-suppressMessages(lapply(c("dplyr","tidyr","lme4","purrr","gee","MuMIn","car","xts"), require, character.only = TRUE))
 
 #' Add row numbers to regression result data.frame
 #'
@@ -13,6 +12,7 @@ add.n.r <- function(df){
 #' @param df a data.frame of regression result
 #' @param z.col the column number of t.value or z.value
 #' @param p.already whether the regression result already contains p.value
+#' @importFrom stats pnorm
 #' @export
 add.p.z <- function(df, z.col = 3, p.already=FALSE){
                               if(p.already==FALSE){
@@ -26,10 +26,10 @@ add.p.z <- function(df, z.col = 3, p.already=FALSE){
 #' @param df a data.frame of regression result
 #' @param Pr.col the column number of p.value
 #' @export
-add.sig <- function(df, Pr.col = 5){data.frame(df,sig=ifelse(df[,Pr.col]<0.001,"***",
-                                                            ifelse(df[,Pr.col]<0.01,"**",
-                                                                   ifelse(df[,Pr.col]<0.05,"*",
-                                                                          ifelse(df[,Pr.col]<0.1,"†","")))))}
+add.sig <- function(df, Pr.col = 5){data.frame(df, sig=ifelse(df[,Pr.col]<0.001, paste0(rep("\x2a", 3), collapse = ""),
+                                                             ifelse(df[,Pr.col]<0.01, paste0(rep("\x2a", 2), collapse = ""),
+                                                                   ifelse(df[,Pr.col]<0.05, paste0(rep("\x2a", 1), collapse = ""),
+                                                                          ifelse(df[,Pr.col]<0.1,"\xe2\x80\xa0","")))))}
 
 # format.reg.table.survival <- function(df, d=d){
 #   df <- data.frame(n.r=1:nrow(df),df)
@@ -52,19 +52,19 @@ add.sig <- function(df, Pr.col = 5){data.frame(df,sig=ifelse(df[,Pr.col]<0.001,"
 #' @param d number of decimal places to retain
 #' @import purrr 
 #' 
-#' @import dplyr
+#' @import dplyr 
 #' 
 #' @import tidyr
 #' 
 #' @export
 format_reg.table <- function(df, d = 3){
-  test <- cbind(var=rownames(df), df[,c(1:3, ncol(df))])
+  test <- cbind(var_=rownames(df), df[,c(1:3, ncol(df))])
   digits <- function(x,d){ if(class(x)=="numeric") {formatC(x, format = "f", digits = d)} else{x} }
   test <- data.frame(purrr::map(test, digits, d)) %>% tidyr::unite(Estimate, 3, 5, sep="")
   test[,4]  <- paste0("(",test[,4],")",sep="")
-  reg.table <- dplyr::arrange(tidyr::gather(test, key, beta, -c(var,n.r)), n.r) %>% select(2, 1, 4)
+  reg.table <- dplyr::arrange(tidyr::gather(test, key, beta, -c(var_,n.r)), n.r) %>% select(2, 1, 4)
   even.row <- rep(c(FALSE, TRUE), nrow(reg.table)/2)
-  reg.table$var <- as.character(reg.table$var)
-  reg.table$var[even.row] <- ""
+  reg.table$var_ <- as.character(reg.table$var_)
+  reg.table$var_[even.row] <- ""
   return(reg.table)
 }

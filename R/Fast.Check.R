@@ -1,6 +1,7 @@
 #' quickly check the vifs in a regression model; for checking multi-collinearity 
 #'
 #' @param model_df a data.frame used in regression model
+#' @import usdm
 #' @export
 reg.Vif <- function(model_df){
   usdm::vif(model_df[,which(sapply(model_df, class) %in% c("numeric","integer","AsIs"))][,-1])
@@ -12,6 +13,7 @@ reg.Vif <- function(model_df){
 #' @param model_df a data.frame used in regression model
 #' @param var_name_select to specify the variable names to be included in the table, default is NULL--all variables are included
 #' @param d number of digits retained after the decimal point
+#' @importFrom stats cor
 #' @export
 reg.Cor <- function(model_df, var_name_select = NULL, d = 3){
   cor.matrix <- round(cor(model_df[,which(sapply(model_df, class) %in% c("numeric","integer","AsIs"))]), d)
@@ -27,7 +29,8 @@ reg.Cor <- function(model_df, var_name_select = NULL, d = 3){
 #' quickly check the proportion of NAs in each columns of a dataframe 
 #'
 #' @param df a data.frame
-#' @param true_total FALSE to show the percentage, TRUE to show the true number of missing values 
+#' @param true_total FALSE to show the percentage, TRUE to show the true number of missing values
+#' @importFrom scales percent
 #' @export
 check_na_in <- function(df, true_total = FALSE){
   if(true_total == TRUE){

@@ -23,6 +23,10 @@
 #' @param mdrt.high.name the label of high-level moderator
 #' @param y.hi.lim specify the upper limit of y
 #' @param y.low.lim specify the lower limit of y
+#' @importFrom stats quantile median sd
+#' @importFrom spatstat dummify
+#' @importFrom robustbase colMedians
+#' @importFrom purrr map
 #' @export
 reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name = NULL, 
                    main1.r, mdrt.r=NULL, int1.r=NULL,
@@ -120,9 +124,9 @@ reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name
   max.x <- quantile(unlist(df[rownames(reg.result)[main1.r]]), probs=max_x, rm.na=TRUE) %>% as.numeric()
   
   # 5 plot
-  library(ggplot2)
-  library(extrafont)
-  library(ggthemes)
+  requireNamespace(ggplot2)
+  requireNamespace(extrafont)
+  requireNamespace(ggthemes)
   
   # function for plot | note: only x is a variable 
   fit.low  <- function(x){constant + b.main*x + b.mdrt*mdrt.low  + b.int1*x*mdrt.low + 

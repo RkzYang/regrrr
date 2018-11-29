@@ -25,6 +25,9 @@
 #' @param mdrt.high.name the label of high-level moderator
 #' @param y.hi.lim specify the upper limit of y
 #' @param y.low.lim specify the lower limit of y
+#' @importFrom stats quantile median sd predict
+#' @importFrom robustbase colMedians
+#' @import stringr
 #' @export
 reg.gg.from.model <- function(reg.result, df, model.for.predict, by_color=FALSE, x_var.name = NULL, y_var.name = NULL, 
                               main1.r, mdrt.r=NULL, int1.r=NULL,
@@ -122,9 +125,9 @@ reg.gg.from.model <- function(reg.result, df, model.for.predict, by_color=FALSE,
   names(df.fake)[length(names(df.fake))] <- y_var.name
   
   # 5 plot
-  library(ggplot2)    
-  library(extrafont)
-  library(ggthemes)
+  requireNamespace(ggplot2)    
+  requireNamespace(extrafont)
+  requireNamespace(ggthemes)
   
   if(by_color == FALSE){
     p <-  ggplot(df.fake, aes_string(x=x_var.name, y=y_var.name)) +

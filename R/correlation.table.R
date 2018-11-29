@@ -5,10 +5,7 @@
 #' @param var_name_select specify the names of regression variables to be included in the correlation matrix
 #' @param all.var.names all variable names, a string vector
 #' @param d number of decimal places to retain
-#' @import purrr 
-#' 
 #' @import dplyr
-#' 
 #' @import tidyr
 #' 
 #' @export

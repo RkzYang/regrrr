@@ -12,6 +12,3 @@ load.pkgs(pkg_name_vec)
 \description{
 load multiple packages
 }
-\examples{
-load.pkgs(c("dplyr", "purrr"))
-}
