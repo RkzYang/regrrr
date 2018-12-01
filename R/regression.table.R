@@ -38,13 +38,13 @@ reg.combine <- function(tbl_1, tbl_2, tbl_3=NULL, tbl_4=NULL, tbl_5=NULL, tbl_6=
   non_empty <- 10 - sum(unlist(purrr::map(all_tbls, is.null)))
   list_tbls <- all_tbls[1:non_empty]
   for(i in 1:length(list_tbls)){
-    list_tbls[[i]]$var[seq(2, nrow(list_tbls[[i]]), by = 2)] <- paste0(list_tbls[[i]]$var[seq(1, nrow(list_tbls[[i]]), by = 2)],"s.e.")
+    list_tbls[[i]]$var_[seq(2, nrow(list_tbls[[i]]), by = 2)] <- paste0(list_tbls[[i]]$var_[seq(1, nrow(list_tbls[[i]]), by = 2)],"s.e.")
     list_tbls[[i]]$n.r <- NULL
   }
   main.table <- list_tbls %>%
-    purrr::reduce(dplyr::full_join,by=c("var"))
+    purrr::reduce(dplyr::full_join,by=c("var_"))
   main.table[is.na(main.table)] <- ""
-  main.table$var[seq(2, nrow(main.table), by = 2)] <- ""
+  main.table$var_[seq(2, nrow(main.table), by = 2)] <- ""
   names(main.table) <- c("Variables", paste0("Model ", 0:(non_empty-1))) 
   return(main.table)}
 

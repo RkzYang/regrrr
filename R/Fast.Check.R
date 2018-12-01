@@ -33,7 +33,7 @@ reg.Cor <- function(model_df, var_name_select = NULL, d = 3){
 #' @importFrom scales percent
 #' @export
 check_na_in <- function(df, true_total = FALSE){
-  if(true_total == TRUE){
+  if(true_total == FALSE){
     result <- scales::percent(sapply(df, function(x) sum(is.na(x)))/nrow(df))
     names(result) <- names(df)}else{
       result <- sapply(df, function(x) sum(is.na(x)))  

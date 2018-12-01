@@ -11,7 +11,7 @@
 #' @export
 reg.Cor.Table <- function(model_df, model_df_to_combine = NULL, var_name_select = NULL, all.var.names = NULL , d = 2){
   # allow addtional data.frame (same structured) from addtional models  
-  if(!is.null(model_df_to_combine) & all.equal(dim(model_df), dim(model_df_to_combine))){
+  if(!is.null(model_df_to_combine) && all.equal(dim(model_df), dim(model_df_to_combine))){
     intersec <- dplyr::intersect(names(model_df), names(model_df_to_combine))
     union_ <- dplyr::union(names(model_df), names(model_df_to_combine))
     y1_y1 <- union_[! union_ %in% intersec]
