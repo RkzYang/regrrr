@@ -124,9 +124,9 @@ reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name
   max.x <- quantile(unlist(df[rownames(reg.result)[main1.r]]), probs=max_x, rm.na=TRUE) %>% as.numeric()
   
   # 5 plot
-  requireNamespace(ggplot2)
-  requireNamespace(extrafont)
-  requireNamespace(ggthemes)
+  # requireNamespace(ggplot2)
+  # requireNamespace(extrafont)
+  # requireNamespace(ggthemes)
   
   # function for plot | note: only x is a variable 
   fit.low  <- function(x){constant + b.main*x + b.mdrt*mdrt.low  + b.int1*x*mdrt.low + 
@@ -147,41 +147,41 @@ reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name
       b.ctrl.mod.3*M.ctrl.mod.3 + b.ctrl.int.3*x*M.ctrl.mod.3
   }
   
-  p <-  ggplot(df, aes_string(x=x_var.name, y=y_var.name)) +
-    scale_x_continuous(limits=c(min.x, max.x), xlab) +
-    scale_y_continuous(limits=c(y.low.lim, y.hi.lim), ylab) 
+  p <-  ggplot2::ggplot(df, ggplot2::aes_string(x=x_var.name, y=y_var.name)) +
+    ggplot2::scale_x_continuous(limits=c(min.x, max.x), xlab) +
+    ggplot2::scale_y_continuous(limits=c(y.low.lim, y.hi.lim), ylab) 
   
   if(is.null(mdrt.mid.name)){
     if(by_color==FALSE){
-      p <- p + stat_function(fun=fit.low,  aes(linetype = mdrt.low.name)) +
-        stat_function(fun=fit.high, aes(linetype = mdrt.high.name)) +
-        scale_linetype_manual(moderator.lab, values=c("solid", "dotted"))
+      p <- p + ggplot2::stat_function(fun=fit.low,  ggplot2::aes(linetype = mdrt.low.name)) +
+        ggplot2::stat_function(fun=fit.high, aes(linetype = mdrt.high.name)) +
+        ggplot2::scale_linetype_manual(moderator.lab, values=c("solid", "dotted"))
     }else{
-      p <- p + stat_function(fun=fit.low,  aes(colour = mdrt.low.name)) +
-        stat_function(fun=fit.high, aes(colour = mdrt.high.name)) +
-        scale_colour_manual(moderator.lab, values = c("red", "black"))
+      p <- p + ggplot2::stat_function(fun=fit.low,  ggplot2::aes(colour = mdrt.low.name)) +
+        ggplot2::stat_function(fun=fit.high, aes(colour = mdrt.high.name)) +
+        ggplot2::scale_colour_manual(moderator.lab, values = c("red", "black"))
     }
   }else{
     if(by_color==FALSE){
-      p <- p +  stat_function(fun=fit.low,  aes(linetype = mdrt.low.name)) +
-        stat_function(fun=fit.mid,  aes(linetype = mdrt.mid.name)) +
-        stat_function(fun=fit.high, aes(linetype = mdrt.high.name)) + 
-        scale_linetype_manual(moderator.lab, values=c("solid", "dashed", "dotted"))
+      p <- p +  ggplot2::stat_function(fun=fit.low,  ggplot2::aes(linetype = mdrt.low.name)) +
+        ggplot2::stat_function(fun=fit.mid,  ggplot2::aes(linetype = mdrt.mid.name)) +
+        ggplot2::stat_function(fun=fit.high, ggplot2::aes(linetype = mdrt.high.name)) + 
+        ggplot2::scale_linetype_manual(moderator.lab, values=c("solid", "dashed", "dotted"))
     }else{
-      p <- p +  stat_function(fun=fit.low,  aes(linetype = mdrt.low.name)) +
-        stat_function(fun=fit.mid,  aes(linetype = mdrt.mid.name)) +
-        stat_function(fun=fit.high, aes(linetype = mdrt.high.name)) + 
-        scale_colour_manual(moderator.lab, values = c("red", "blue", "black"))
+      p <- p + ggplot2::stat_function(fun=fit.low,  ggplot2::aes(linetype = mdrt.low.name)) +
+        ggplot2::stat_function(fun=fit.mid,  ggplot2::aes(linetype = mdrt.mid.name)) +
+        ggplot2::stat_function(fun=fit.high, ggplot2::aes(linetype = mdrt.high.name)) + 
+        ggplot2::scale_colour_manual(moderator.lab, values = c("red", "blue", "black"))
     }
   }
   
   # customize #
-  p <- p + theme_light() + 
-    theme(text=element_text(family="Times New Roman", size=16)) +
-    theme(legend.position="bottom")
+  p <- p + ggplot2::theme_light() + 
+    ggplot2::theme(text=element_text(family="Times New Roman", size=16)) +
+    ggplot2::theme(legend.position="bottom")
   
   if(!is.null(title)){
-    p + ggtitle(title) 
+    p + ggplot2::ggtitle(title) 
   }
   p
 }
