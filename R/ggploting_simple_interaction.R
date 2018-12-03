@@ -27,7 +27,7 @@
 #' @importFrom spatstat dummify
 #' @importFrom robustbase colMedians
 #' @importFrom purrr map
-#' @export
+# found problem on 12.02.2018
 reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name = NULL, 
                    main1.r, mdrt.r=NULL, int1.r=NULL,
                    min_x=0.001, max_x=0.999, 
@@ -154,11 +154,11 @@ reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name
   if(is.null(mdrt.mid.name)){
     if(by_color==FALSE){
       p <- p + ggplot2::stat_function(fun=fit.low,  ggplot2::aes(linetype = mdrt.low.name)) +
-        ggplot2::stat_function(fun=fit.high, aes(linetype = mdrt.high.name)) +
+        ggplot2::stat_function(fun=fit.high, ggplot2::aes(linetype = mdrt.high.name)) +
         ggplot2::scale_linetype_manual(moderator.lab, values=c("solid", "dotted"))
     }else{
       p <- p + ggplot2::stat_function(fun=fit.low,  ggplot2::aes(colour = mdrt.low.name)) +
-        ggplot2::stat_function(fun=fit.high, aes(colour = mdrt.high.name)) +
+        ggplot2::stat_function(fun=fit.high, ggplot2::aes(colour = mdrt.high.name)) +
         ggplot2::scale_colour_manual(moderator.lab, values = c("red", "black"))
     }
   }else{
@@ -177,7 +177,7 @@ reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name
   
   # customize #
   p <- p + ggplot2::theme_light() + 
-    ggplot2::theme(text=element_text(family="Times New Roman", size=16)) +
+    ggplot2::theme(text=ggplot2::element_text(family="Times New Roman", size=16)) +
     ggplot2::theme(legend.position="bottom")
   
   if(!is.null(title)){

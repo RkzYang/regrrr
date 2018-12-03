@@ -40,6 +40,9 @@ reg.gg.from.model <- function(reg.result, df, model.for.predict, by_color=FALSE,
   
   tryCatch({reg.result <- as.data.frame(reg.result)}, error=function(e){cat("ERROR :", conditionMessage(e), "\n")})
   
+  if(is.null(x_var.name)){stop("what is the X variable name (x_var.name) in the model?")}
+  if(is.null(y_var.name)){stop("what is the Y variable name (y_var.name) in the model?")}
+  
   df <- as.data.frame(df)
   
   factor.names <- rownames(reg.result)[stringr::str_detect(rownames(reg.result), pattern = "factor")]
@@ -125,43 +128,43 @@ reg.gg.from.model <- function(reg.result, df, model.for.predict, by_color=FALSE,
   names(df.fake)[length(names(df.fake))] <- y_var.name
   
   # 5 plot
-  requireNamespace(ggplot2)    
-  requireNamespace(extrafont)
-  requireNamespace(ggthemes)
+  # requireNamespace(ggplot2)    
+  # requireNamespace(extrafont)
+  # requireNamespace(ggthemes)
   
   if(by_color == FALSE){
-    p <-  ggplot(df.fake, aes_string(x=x_var.name, y=y_var.name)) +
-      geom_line(aes(linetype = mod.level)) +
-      scale_x_continuous(limits=c(min.x, max.x), xlab) +
-      scale_y_continuous(limits=c(y.low.lim, y.hi.lim), ylab)
+    p <-  ggplot2::ggplot(df.fake, ggplot2::aes_string(x=x_var.name, y=y_var.name)) +
+      ggplot2::geom_line(ggplot2::aes(linetype = mod.level)) +
+      ggplot2::scale_x_continuous(limits=c(min.x, max.x), xlab) +
+      ggplot2::scale_y_continuous(limits=c(y.low.lim, y.hi.lim), ylab)
     
     if(!is.null(mdrt.mid.name)){
-      p <- p + scale_linetype_manual(moderator.lab, values=c("solid", "dashed", "dotted"))
+      p <- p + ggplot2::scale_linetype_manual(moderator.lab, values=c("solid", "dashed", "dotted"))
     }else{
-      p <- p + scale_linetype_manual(moderator.lab, values=c("solid", "dotted"))
+      p <- p + ggplot2::scale_linetype_manual(moderator.lab, values=c("solid", "dotted"))
     }
     
   }else{
-    p <-  ggplot(df.fake, aes_string(x=x_var.name, y=y_var.name)) +
-      geom_line(aes(color = mod.level)) +
-      scale_x_continuous(limits=c(min.x, max.x), xlab) +
-      scale_y_continuous(limits=c(y.low.lim, y.hi.lim), ylab)
+    p <-  ggplot2::ggplot(df.fake, ggplot2::aes_string(x=x_var.name, y=y_var.name)) +
+      ggplot2::geom_line(ggplot2::aes(color = mod.level)) +
+      ggplot2::scale_x_continuous(limits=c(min.x, max.x), xlab) +
+      ggplot2::scale_y_continuous(limits=c(y.low.lim, y.hi.lim), ylab)
     
     if(!is.null(mdrt.mid.name)){
-      p <- p + scale_colour_manual(moderator.lab, values = c("red", "blue", "black"))
+      p <- p + ggplot2::scale_colour_manual(moderator.lab, values = c("red", "blue", "black"))
     }else{
-      p <- p + scale_colour_manual(moderator.lab, values = c("red", "black"))
+      p <- p + ggplot2::scale_colour_manual(moderator.lab, values = c("red", "black"))
     }
     
   }
   
   # customize #
-  p <- p + theme_light() + 
-    theme(text=element_text(family="Times New Roman", size=16)) +
-    theme(legend.position="bottom")
+  p <- p + ggplot2::theme_light() + 
+    ggplot2::theme(text=ggplot2::element_text(family="Times New Roman", size=16)) +
+    ggplot2::theme(legend.position="bottom")
   
   if(!is.null(title)){
-    p + ggtitle(title) 
+    p + ggplot2::ggtitle(title) 
   }
   p
 }
