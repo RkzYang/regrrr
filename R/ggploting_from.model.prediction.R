@@ -28,6 +28,7 @@
 #' @importFrom stats quantile median sd predict
 #' @importFrom robustbase colMedians
 #' @import stringr
+#' @import ggplot2
 #' @export
 reg.gg.from.model <- function(reg.result, df, model.for.predict, by_color=FALSE, x_var.name = NULL, y_var.name = NULL, 
                               main1.r, mdrt.r=NULL, int1.r=NULL,
@@ -166,5 +167,5 @@ reg.gg.from.model <- function(reg.result, df, model.for.predict, by_color=FALSE,
   if(!is.null(title)){
     p + ggplot2::ggtitle(title) 
   }
-  p
+  suppressWarnings(p)
 }

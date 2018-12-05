@@ -27,6 +27,7 @@
 #' @importFrom spatstat dummify
 #' @importFrom robustbase colMedians
 #' @importFrom purrr map
+#' @import ggplot2
 # found problem on 12.02.2018
 reg.gg <- function(reg.result, df, by_color=FALSE, x_var.name = NULL, y_var.name = NULL, 
                    main1.r, mdrt.r=NULL, int1.r=NULL,
