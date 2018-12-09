@@ -1,6 +1,6 @@
 Package: regrrr
 Type: Package
-Title: Compiling, Testing, Plotting Regression Results
+Title: Toolkit for Compiling, Testing, and Plotting Regression Result
 Version: 0.1.0
 Author: R.K. Yang; Luyao Peng
 Maintainer: R.K. Yang <rkzyang@gmail.com>
