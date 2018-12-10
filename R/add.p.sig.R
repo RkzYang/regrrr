@@ -44,7 +44,7 @@ add.sig <- function(df, Pr.col = 5){data.frame(df, sig=ifelse(df[,Pr.col]<0.001,
 #   reg.table$var[even.row] <- ""
 #   return(reg.table)
 # }
-# suppressWarnings(warning("format.reg.table"))
+# suppressWarnings(warning("format.reg.table"))  
 
 #' Convert the regression result to the long format: the standard errors are in parentheses and beneath the betas
 #'
