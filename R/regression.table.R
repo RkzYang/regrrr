@@ -33,9 +33,10 @@ reg.table <- function(lm.obj){
 #' @param tbl_10 the 10th data.frame of regression result
 #' @import purrr
 #' @export
-reg.combine <- function(tbl_1, tbl_2, tbl_3=NULL, tbl_4=NULL, tbl_5=NULL, tbl_6=NULL, tbl_7=NULL, tbl_8=NULL, tbl_9=NULL, tbl_10=NULL) {
-  all_tbls <- list(tbl_1,tbl_2,tbl_3,tbl_4,tbl_5,tbl_6,tbl_7,tbl_8,tbl_9,tbl_10)
-  non_empty <- 10 - sum(unlist(purrr::map(all_tbls, is.null)))
+reg.combine <- function(tbl_1, tbl_2, tbl_3=NULL, tbl_4=NULL, tbl_5=NULL, tbl_6=NULL, tbl_7=NULL, tbl_8=NULL, tbl_9=NULL, tbl_10=NULL,
+                        tbl_11=NULL, tbl_12=NULL, tbl_13=NULL, tbl_14=NULL, tbl_15=NULL, tbl_16=NULL, tbl_17=NULL, tbl_18=NULL, tbl_19=NULL, tbl_20=NULL) {
+  all_tbls <- list(tbl_1,tbl_2,tbl_3,tbl_4,tbl_5,tbl_6,tbl_7,tbl_8,tbl_9,tbl_10,tbl_11,tbl_12,tbl_13,tbl_14,tbl_15,tbl_16,tbl_17,tbl_18,tbl_19,tbl_20)
+  non_empty <- length(all_tbls) - sum(unlist(purrr::map(all_tbls, is.null)))
   list_tbls <- all_tbls[1:non_empty]
   for(i in 1:length(list_tbls)){
     list_tbls[[i]]$var_[seq(2, nrow(list_tbls[[i]]), by = 2)] <- paste0(list_tbls[[i]]$var_[seq(1, nrow(list_tbls[[i]]), by = 2)],"s.e.")
@@ -70,12 +71,13 @@ reg.combine <- function(tbl_1, tbl_2, tbl_3=NULL, tbl_4=NULL, tbl_5=NULL, tbl_6=
 #' @import MuMIn
 #' @export
 mod.compare <- function(model1, model2, model3=NULL, model4=NULL, model5=NULL, model6=NULL, model7=NULL, model8=NULL, model9=NULL, model10=NULL,
+                        model11, model12, model13=NULL, model14=NULL, model15=NULL, model16=NULL, model17=NULL, model18=NULL, model19=NULL, model20=NULL,
                         likelihood.only = FALSE, round.digit = 3, 
                         main.effect.only = NULL,
                         intn.effect.only = NULL){
   
-  list_all <- list(model1, model2, model3, model4, model5, model6, model7, model8, model9, model10)
-  non_empty <- 10 - sum(unlist(purrr::map(list_all, is.null)))
+  list_all <- list(model1, model2, model3, model4, model5, model6, model7, model8, model9, model10, model11, model12, model13, model14, model15, model16, model17, model18, model19, model20)
+  non_empty <- length(list_all) - sum(unlist(purrr::map(list_all, is.null)))
   model_list <- list_all[1:non_empty]
   
   if(likelihood.only == TRUE){
@@ -93,7 +95,17 @@ mod.compare <- function(model1, model2, model3=NULL, model4=NULL, model5=NULL, m
               suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7)))}else if(n==8){
                 suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8)))}else if(n==9){
                   suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9)))}else if(n==10){
-                    suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10)))}
+                    suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10)))}else if(n==11){
+                      suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10,model11)))}else if(n==12){
+                        suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10,model11,model12)))}else if(n==13){
+                          suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10,model11,model12,model13)))}else if(n==14){
+                            suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10,model11,model12,model13,model14)))}else if(n==15){
+                              suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10,model11,model12,model13,model14,model15)))}else if(n==16){
+                                suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10,model11,model12,model13,model14,model15,model16)))}else if(n==17){
+                                  suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10,model11,model12,model13,model14,model15,model16,model17)))}else if(n==18){
+                                    suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10,model11,model12,model13,model14,model15,model16,model17,model18)))}else if(n==19){
+                                      suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10,model11,model12,model13,model14,model15,model16,model17,model18,model19)))}else if(n==20){
+                                        suppressWarnings(suppressMessages(anova(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10,model11,model12,model13,model14,model15,model16,model17,model18,model19,model20)))}
   
     if(!is.null(main.effect.only)){
       for(i in main.effect.only){

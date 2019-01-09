@@ -2,7 +2,8 @@
 #'
 #' Compiling, Testing, Plotting Regression Results
 #'
-#' @author RKY \email{rkzyang@gmail.com}
+#' @author R.K. Yang \email{rkzyang@gmail.com}
+#' @author Luyao Peng \email{luyaopeng.cn@gmail.com}
 #' @docType package
 #' @name regrrr
 "_PACKAGE"
