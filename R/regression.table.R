@@ -71,7 +71,7 @@ reg.combine <- function(tbl_1, tbl_2, tbl_3=NULL, tbl_4=NULL, tbl_5=NULL, tbl_6=
 #' @import MuMIn
 #' @export
 mod.compare <- function(model1, model2, model3=NULL, model4=NULL, model5=NULL, model6=NULL, model7=NULL, model8=NULL, model9=NULL, model10=NULL,
-                        model11, model12, model13=NULL, model14=NULL, model15=NULL, model16=NULL, model17=NULL, model18=NULL, model19=NULL, model20=NULL,
+                        model11=NULL, model12=NULL, model13=NULL, model14=NULL, model15=NULL, model16=NULL, model17=NULL, model18=NULL, model19=NULL, model20=NULL,
                         likelihood.only = FALSE, round.digit = 3, 
                         main.effect.only = NULL,
                         intn.effect.only = NULL){
