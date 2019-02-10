@@ -28,8 +28,8 @@ reg.Cor.Table <- function(model_df, model_df_to_combine = NULL, var_name_select 
   }
   # add mean and s.d.
   cor.matrix[upper.tri(cor.matrix, diag = FALSE)] <- NA
-  means <- colMeans(df, na.rm=TRUE) 
-  sds   <- sapply(df, FUN=sd, na.rm=TRUE)
+  means <- colMeans(df[colnames(cor.matrix)], na.rm=TRUE) 
+  sds   <- sapply(df[colnames(cor.matrix)], FUN=sd, na.rm=TRUE)
   c.matrix <- do.call(cbind, list(means, sds, cor.matrix)) %>% formatC(format='f', digits = d)
   # add colnames 
   colnames(c.matrix) <- c(c("Mean", "S.D."), 1:nrow(c.matrix))
