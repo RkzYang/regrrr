@@ -1,6 +1,6 @@
 #' make the correlation matrix from the data.frame used in regression
 #'
-#' @param model_df a data.frame used in regression model
+#' @param model_df a data.frame used in regression model, e.g. model$model
 #' @param model_df_to_combine another data.frame used for regression model, e.g. when you have similar set of X's but different Y's
 #' @param var_name_select specify the names of regression variables to be included in the correlation matrix
 #' @param all.var.names all variable names, a string vector
