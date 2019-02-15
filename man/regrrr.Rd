@@ -4,11 +4,12 @@
 \name{regrrr}
 \alias{regrrr}
 \alias{regrrr-package}
-\alias{regrrr-package}
 \title{regrrr: a toolkit for compiling regression results}
 \description{
 Compiling, Testing, Plotting Regression Results
 }
 \author{
-RKY \email{rkzyang@gmail.com}
+R.K. Yang \email{rkzyang@gmail.com}
+
+Luyao Peng \email{luyaopeng.cn@gmail.com}
 }

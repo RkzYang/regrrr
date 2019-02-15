@@ -5,19 +5,20 @@
 \title{plotting the interaction, with or without multiple interactions, FROM the model prediction
 by creating a hypothetical dataset}
 \usage{
-reg.gg.from.model(reg.result, df, model.for.predict, by_color = FALSE,
-  x_var.name = NULL, y_var.name = NULL, main1.r, mdrt.r = NULL,
-  int1.r = NULL, min_x = 0.001, max_x = 0.999, mdrt_quantile_05 = NULL,
-  mdrt_quantile_50 = NULL, mdrt_quantile_95 = NULL, mod.n.sd = NULL,
-  title = NULL, xlab = "X_Var.name", ylab = "Y_Var.name",
+reg.gg.from.model(reg.coef, data, model.for.predict, by_color = FALSE,
+  x_var.name = NULL, y_var.name = NULL, moderator.name = NULL,
+  min_x = 0.001, max_x = 0.999, mdrt_quantile_05 = NULL,
+  mdrt_quantile_50 = NULL, mdrt_quantile_95 = NULL, mod.n.sd = 1,
+  confidence_interval = FALSE, CI_Ribbon = FALSE, title = NULL,
+  xlab = "X_Var.name", ylab = "Y_Var.name",
   moderator.lab = "Moderator_name", mdrt.low.name = "Low",
   mdrt.mid.name = NULL, mdrt.high.name = "High", y.hi.lim = NULL,
   y.low.lim = NULL)
 }
 \arguments{
-\item{reg.result}{a data.frame of regression result}
+\item{reg.coef}{a coefficient data.frame of regression result}
 
-\item{df}{the data used in regression}
+\item{data}{the data used in regression, a data frame}
 
 \item{model.for.predict}{the model object, such as a "lm" object}
 
@@ -27,11 +28,7 @@ reg.gg.from.model(reg.result, df, model.for.predict, by_color = FALSE,
 
 \item{y_var.name}{y name in the regression model, a string}
 
-\item{main1.r}{the row number of the main effect, in reg.result}
-
-\item{mdrt.r}{the row number of the moderater, in reg.result}
-
-\item{int1.r}{the row number of the interaction, in reg.result}
+\item{moderator.name}{moderating variable name in the regression model, a string}
 
 \item{min_x}{the min of x scale, in percentile of x}
 
@@ -44,6 +41,10 @@ reg.gg.from.model(reg.result, df, model.for.predict, by_color = FALSE,
 \item{mdrt_quantile_95}{set the high level of moderator, in percentile}
 
 \item{mod.n.sd}{set the moderating strength, in the number of s.d. units, which can take negative values}
+
+\item{confidence_interval}{if TRUE, plot confidence intervals}
+
+\item{CI_Ribbon}{if TRUE, plot confidence interval ribbons, if FALSE, plot error bars}
 
 \item{title}{the title of the plot}
 
@@ -66,4 +67,15 @@ reg.gg.from.model(reg.result, df, model.for.predict, by_color = FALSE,
 \description{
 plotting the interaction, with or without multiple interactions, FROM the model prediction
 by creating a hypothetical dataset
+}
+\examples{
+
+data(mtcars)
+model <- lm(mpg ~ vs + carb + hp + wt + wt * hp , data = mtcars)
+reg.gg.from.model(reg.coef = summary(model)$coefficients, 
+                 data = mtcars, model.for.predict = model, 
+                 x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp", 
+                 confidence_interval = TRUE,  CI_Ribbon = TRUE, 
+                 xlab = "Weight", ylab = "MPG", moderator.lab = "Horsepower")
+
 }

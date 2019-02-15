@@ -4,11 +4,11 @@
 \alias{reg.Cor.Table}
 \title{make the correlation matrix from the data.frame used in regression}
 \usage{
-reg.Cor.Table(model_df, model_df_to_combine = NULL, var_name_select = NULL,
-  all.var.names = NULL, d = 2)
+reg.Cor.Table(model_df, model_df_to_combine = NULL,
+  var_name_select = NULL, all.var.names = NULL, d = 2)
 }
 \arguments{
-\item{model_df}{a data.frame used in regression model}
+\item{model_df}{a data.frame used in regression model, e.g. model$model}
 
 \item{model_df_to_combine}{another data.frame used for regression model, e.g. when you have similar set of X's but different Y's}
 

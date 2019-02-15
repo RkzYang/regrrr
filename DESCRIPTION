@@ -2,14 +2,15 @@ Package: regrrr
 Type: Package
 Title: Toolkit for Compiling, Testing, and Plotting Regression Result
 Version: 0.1.0
+Depends: R (>= 3.5.0)
 Author: R.K. Yang; Luyao Peng
 Maintainer: R.K. Yang <rkzyang@gmail.com>
 Description: Compiling Regression Results for Management Journals. Compiling Regression Results to Tables. Plotting Regression Results to Graphs.
-License:  GPL-3 
+License: GPL-3 
 Encoding: UTF-8
 LazyData: true
 Suggests: testthat
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Imports: stats,
          purrr,
          dplyr,
@@ -19,4 +20,5 @@ Imports: stats,
          robustbase,
          stringr,
          spatstat,
-         MuMIn
+         MuMIn,
+         ggplot2
