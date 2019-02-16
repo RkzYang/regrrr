@@ -1,7 +1,12 @@
 Package: regrrr
 Type: Package
-Title: Toolkit for Compiling, Testing, and Plotting Regression Result
+Title: Toolkit for Compiling, (Post-hoc) Testing, and Plotting Regression Results
 Version: 0.1.0
+Description: This package is for compiling regression results into a publishable format, 
+    conducting post-hoc hypothesis testing, and plotting moderating effects. It can save headaches for
+    "theory-driven" researchers in social science who value the interpretability of independent variables (X),  
+    theorize on the mechanisms (why X affects Y), look for the boundary conditions (moderating effect) 
+    of the main effect (the effect of X on Y becomes stronger/weaker as Z increases).
 Depends: R (>= 3.5.0)
 Authors@R: 
     c(person(given = "Rui K.",
@@ -13,7 +18,6 @@ Authors@R:
            role = c("aut"),
            email = "luyaopeng.cn@gmail.com"))
 Maintainer: Rui K. Yang <rkzyang@gmail.com>
-Description: Compiling Regression Results for Management Journals. Compiling Regression Results to Tables. Plotting Regression Results to Graphs.
 License: GPL-3 
 Encoding: UTF-8
 LazyData: true
@@ -22,6 +26,7 @@ RoxygenNote: 6.1.1
 Imports: stats,
          purrr,
          dplyr,
+         magrittr,
          tidyr,
          usdm,
          scales,

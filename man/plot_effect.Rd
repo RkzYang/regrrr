@@ -4,22 +4,21 @@
 \alias{plot_effect}
 \title{plotting the marginal effect of X on Y, with or without one or multiple interaction terms}
 \usage{
-plot_effect(reg.coef, data, model.for.predict, by_color = FALSE,
-  x_var.name = NULL, y_var.name = NULL, moderator.name = NULL,
-  min_x = 0.001, max_x = 0.999, mdrt_quantile_05 = NULL,
-  mdrt_quantile_50 = NULL, mdrt_quantile_95 = NULL, mod.n.sd = 1,
-  confidence_interval = FALSE, CI_Ribbon = FALSE, title = NULL,
-  xlab = "X_Var.name", ylab = "Y_Var.name",
-  moderator.lab = "Moderator_name", mdrt.low.name = "Low",
-  mdrt.mid.name = NULL, mdrt.high.name = "High", y.hi.lim = NULL,
-  y.low.lim = NULL)
+plot_effect(reg.coef, data, model, by_color = FALSE, x_var.name = NULL,
+  y_var.name = NULL, moderator.name = NULL, min_x = 0.001,
+  max_x = 0.999, mdrt_quantile_05 = NULL, mdrt_quantile_50 = NULL,
+  mdrt_quantile_95 = NULL, mod.n.sd = 1, confidence_interval = FALSE,
+  v = NULL, CI_Ribbon = FALSE, title = NULL, xlab = "X_Var.name",
+  ylab = "Y_Var.name", moderator.lab = "Moderator_name",
+  mdrt.low.name = "Low", mdrt.mid.name = NULL,
+  mdrt.high.name = "High", y.high.lim = NULL, y.low.lim = NULL)
 }
 \arguments{
-\item{reg.coef}{a coefficient data.frame of regression result}
+\item{reg.coef}{a coefficient matrix of regression result, e.g. summary(lm_model)$coef}
 
 \item{data}{the data used in regression, a data frame}
 
-\item{model.for.predict}{the model object, such as a "lm" object}
+\item{model}{the model object, such as a "lm" object}
 
 \item{by_color}{plot interactions by colors, otherwise by line types}
 
@@ -43,6 +42,8 @@ plot_effect(reg.coef, data, model.for.predict, by_color = FALSE,
 
 \item{confidence_interval}{if TRUE, plot confidence intervals}
 
+\item{v}{a customized variance-covariance matrix}
+
 \item{CI_Ribbon}{if TRUE, plot confidence interval ribbons, if FALSE, plot error bars}
 
 \item{title}{the title of the plot}
@@ -59,7 +60,7 @@ plot_effect(reg.coef, data, model.for.predict, by_color = FALSE,
 
 \item{mdrt.high.name}{the label of high-level moderator}
 
-\item{y.hi.lim}{specify the upper limit of y}
+\item{y.high.lim}{specify the upper limit of y}
 
 \item{y.low.lim}{specify the lower limit of y}
 }
@@ -70,7 +71,7 @@ plotting the marginal effect of X on Y, with or without one or multiple interact
 data(mtcars)
 m1 <- lm(mpg ~ vs + carb + hp + wt + wt * hp , data = mtcars)
 plot_effect(reg.coef = summary(m1)$coefficients, 
-                 data = mtcars, model.for.predict = m1, 
+                 data = mtcars, model = m1, 
                  x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp", 
                  confidence_interval = TRUE,  CI_Ribbon = TRUE, 
                  xlab = "Weight", ylab = "MPG", moderator.lab = "Horsepower")
@@ -79,7 +80,7 @@ plot_effect(reg.coef = summary(m1)$coefficients,
 data(mtcars)
 m2 <- lm(mpg ~ vs + carb + hp + wt + wt * hp + wt * vs, data = mtcars)
 plot_effect(reg.coef = summary(m2)$coefficients, 
-            data = mtcars, model.for.predict = m2, 
+            data = mtcars, model = m2, 
             x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp", 
             confidence_interval = TRUE,  CI_Ribbon = FALSE, 
             xlab = "Weight", ylab = "MPG", moderator.lab = "Horsepower")
@@ -89,7 +90,7 @@ plot_effect(reg.coef = summary(m2)$coefficients,
 library(extrafont)
 m1 <- lm(mpg ~ vs + carb + hp + wt + wt * hp , data = mtcars)
 plot_effect(reg.coef = summary(m1)$coefficients, 
-                 data = mtcars, model.for.predict = m1, 
+                 data = mtcars, model = m1, 
                  x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp", 
                  confidence_interval = TRUE,  CI_Ribbon = TRUE, 
                  xlab = "Weight", ylab = "MPG", moderator.lab = "Horsepower") + 

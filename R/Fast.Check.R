@@ -9,7 +9,12 @@
 #' @import usdm
 #' @export
 check_vif <- function(data){
+  
+  tryCatch({
+    
   usdm::vif(data[, which(sapply(data, class) %in% c("numeric","integer","AsIs"))][,-1])
+    
+  }, error=function(e){cat("ERROR :", conditionMessage(e), "\n")})
 }
 
 #' quickly check correlation matrix, or the correlation between a particular X and all other vars 
@@ -25,6 +30,9 @@ check_vif <- function(data){
 #' @importFrom stats cor
 #' @export
 check_cor <- function(data, var_name_select = NULL, d = 3){
+  
+  tryCatch({
+  
   cor.matrix <- round(cor(data[,which(sapply(data, class) %in% c("numeric","integer","AsIs"))]), d)
   if(is.null(var_name_select)){
     result <- cor.matrix
@@ -32,6 +40,9 @@ check_cor <- function(data, var_name_select = NULL, d = 3){
     seleted <- which(row.names(cor.matrix) %in% var_name_select)
     result <- cor.matrix[seleted, seleted]
   }
+  
+  }, error=function(e){cat("ERROR :", conditionMessage(e), "\n")})
+  
   return(result)
 }
 
@@ -46,10 +57,16 @@ check_cor <- function(data, var_name_select = NULL, d = 3){
 #' @importFrom scales percent
 #' @export
 check_na_in <- function(data, true_total = FALSE){
+  
+  tryCatch({
+  
   if(true_total == FALSE){
     result <- scales::percent(sapply(data, function(x) sum(is.na(x)))/nrow(data))
     names(result) <- names(data)}else{
       result <- sapply(data, function(x) sum(is.na(x)))  
     }
+  
+  }, error=function(e){cat("ERROR :", conditionMessage(e), "\n")})
+    
   return(result)
 }

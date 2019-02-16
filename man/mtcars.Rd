@@ -4,11 +4,15 @@
 \name{mtcars}
 \alias{mtcars}
 \title{mtcars}
+\format{An object of class \code{data.frame} with 32 rows and 11 columns.}
+\source{
+Henderson and Velleman (1981), Building multiple regression models interactively. Biometrics, 37, 391–411.
+}
 \usage{
 data(mtcars)
 }
 \description{
-This is mtcars
+Motor Trend Car Road Tests
 }
 \details{
 mtcars

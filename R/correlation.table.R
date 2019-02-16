@@ -16,7 +16,9 @@
 #' 
 #' @export
 cor.table <- function(data, data_to_combine = NULL, var_name_select = NULL, all.var.names = NULL , d = 2){
-  # allow addtional data.frame (same structured) from addtional models  
+  
+  tryCatch({
+  # allow addtional data.frame (same structured) from addtional models
   if(!is.null(data_to_combine) && all.equal(dim(data), dim(data_to_combine))){
     intersec <- dplyr::intersect(names(data), names(data_to_combine))
     union_ <- dplyr::union(names(data), names(data_to_combine))
@@ -48,4 +50,7 @@ cor.table <- function(data, data_to_combine = NULL, var_name_select = NULL, all.
     col_names <- paste(1:nrow(c.matrix), rownames(c.matrix), sep = ".")
   }
   rownames(result) <- col_names
+  
+  }, error=function(e){cat("ERROR :", conditionMessage(e), "\n")})
+
   return(result)}

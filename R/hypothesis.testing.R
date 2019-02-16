@@ -2,7 +2,7 @@
 #' testing restriction: the sig. of beta_x under the moderation of z1, with or without additional interaction terms, Aug 13th
 #'
 #' @param reg.coef a data.frame (or matrix) of regression result or a coeftest object, e.g. summary(lm_model)$coef, coeftest(lm_model, cluster.vcov(lm_model, cbind(data$group1,  data$group2)))
-#' @param all.vcv the complete variance-covariance matrix
+#' @param v a customized variance-covariance matrix
 #' @param model the model object, such as a "lm" object
 #' @param x_var.name main independent variable name in model, a string
 #' @param moderator.name moderator name in model, a string
@@ -21,14 +21,16 @@
 #' @import purrr
 #' @import stringr
 #' @export
-test_tilted_slopes <- function(reg.coef, all.vcv = NULL, model, x_var.name, moderator.name, mod.n.sd = 1, data, t.value.col = 3, Pr.col = 4){
+test_tilted_slopes <- function(reg.coef, v = NULL, model, x_var.name, moderator.name, mod.n.sd = 1, data, t.value.col = 3, Pr.col = 4){
   # m <- m2 # m is the regression result
   # mod_name <- "post.StrFoc" # moderator name in model
   # model <- H.01 # original model (such as a "lm" object)
   # data <- Event.CAR # full data set
   # extract vcov among related beta's (of main effect and the interaction terms)
-  # all.vcv <- cluster.vcov(model, cbind( Event.CAR$Acquiror.fed_rssd,  Event.CAR$Quarter.Announced))
-  
+  # v <- cluster.vcov(model, cbind( Event.CAR$Acquiror.fed_rssd,  Event.CAR$Quarter.Announced))
+
+  tryCatch({
+    
   if(!class(reg.coef) %in% c("matrix", "data.frame", "coeftest")){stop("reg.coef needs to be a data.frame or an coeftest object")}
   
   if(class(reg.coef) == "coeftest"){
@@ -61,10 +63,10 @@ test_tilted_slopes <- function(reg.coef, all.vcv = NULL, model, x_var.name, mode
   focal.interaction.name <- interaction.names[stringr::str_detect(interaction.names, pattern = mod_name)]
   other.interaction.name <- interaction.names[!stringr::str_detect(interaction.names, pattern = mod_name)]
   (related.var.position <- c(which(row.names(m) == main.name), which(row.names(m) == focal.interaction.name), which(row.names(m) %in% other.interaction.name)))
-  if(is.null(all.vcv)){
-    all.vcv <- stats::vcov(model)
+  if(is.null(v)){
+    v <- stats::vcov(model)
   }
-  betas.vcv <- all.vcv[related.var.position, related.var.position]
+  betas.vcv <- v[related.var.position, related.var.position]
   # fix the intrested moderator to high and low level
   mod_vec <- unlist(data[mod_name])
   mod_high <- mean(mod_vec) + mod.n.sd*sd(mod_vec)
@@ -85,6 +87,9 @@ test_tilted_slopes <- function(reg.coef, all.vcv = NULL, model, x_var.name, mode
                                        p. = 2*pt(-abs(beta/se), df = nrow(data)-1))}
   result <- purrr::pmap(list(beta=list(beta_star_high, beta_star_low), se=list(se_star_high, se_star_low)), sig)
   names(result) <- c("high_level", "low_level")
+  
+  }, error=function(e){cat("ERROR :", conditionMessage(e), "\n")})
+  
   return(result)
 }
 
@@ -106,6 +111,8 @@ test_tilted_slopes <- function(reg.coef, all.vcv = NULL, model, x_var.name, mode
 #' @export
 test_coef_equality = function(model, var1.name, var2.name, v = NULL){
   
+  tryCatch({
+  
   betas <- coef(model)
   (beta_var1 <- betas[stringr::str_detect(names(betas), pattern = var1.name)][1])
   (beta_var2 <- betas[stringr::str_detect(names(betas), pattern = var2.name)][1])
@@ -119,4 +126,7 @@ test_coef_equality = function(model, var1.name, var2.name, v = NULL){
   dif.se <- as.numeric( sqrt( v[v.var1.p, v.var1.p] + v[v.var2.p, v.var2.p] - 2*v[v.var1.p, v.var2.p] ) )
   p.norm <- 2*(1 - pnorm(abs(dif/dif.se)))
   names(p.norm) <- "p.norm"
+  
+  }, error=function(e){cat("ERROR :", conditionMessage(e), "\n")})
+  
   return(p.norm)}

@@ -18,6 +18,9 @@
 #' 
 #' @export
 to_long_tab <- function(reg.coef, d = 3, t.value.col = 3, Pr.col = 4){
+  
+  tryCatch({
+  
   if(! "n.r" %in% colnames(reg.coef)){
     reg.coef <- data.frame(n.r = 1:nrow(reg.coef), reg.coef)
   }
@@ -50,6 +53,9 @@ to_long_tab <- function(reg.coef, d = 3, t.value.col = 3, Pr.col = 4){
   even.row <- rep(c(FALSE, TRUE), nrow(reg.table)/2)
   reg.table$var_ <- as.character(reg.table$var_)
   reg.table$var_[even.row] <- ""
+  
+  }, error=function(e){cat("ERROR :", conditionMessage(e), "\n")})
+  
   return(reg.table)
 }
 
@@ -89,6 +95,9 @@ to_long_tab <- function(reg.coef, d = 3, t.value.col = 3, Pr.col = 4){
 #' @export
 combine_long_tab <- function(tbl_1, tbl_2, tbl_3=NULL, tbl_4=NULL, tbl_5=NULL, tbl_6=NULL, tbl_7=NULL, tbl_8=NULL, tbl_9=NULL, tbl_10=NULL,
                         tbl_11=NULL, tbl_12=NULL, tbl_13=NULL, tbl_14=NULL, tbl_15=NULL, tbl_16=NULL, tbl_17=NULL, tbl_18=NULL, tbl_19=NULL, tbl_20=NULL) {
+  
+  tryCatch({
+  
   all_tbls <- list(tbl_1,tbl_2,tbl_3,tbl_4,tbl_5,tbl_6,tbl_7,tbl_8,tbl_9,tbl_10,tbl_11,tbl_12,tbl_13,tbl_14,tbl_15,tbl_16,tbl_17,tbl_18,tbl_19,tbl_20)
   non_empty <- length(all_tbls) - sum(unlist(purrr::map(all_tbls, is.null)))
   list_tbls <- all_tbls[1:non_empty]
@@ -100,6 +109,9 @@ combine_long_tab <- function(tbl_1, tbl_2, tbl_3=NULL, tbl_4=NULL, tbl_5=NULL, t
   main.table[is.na(main.table)] <- ""
   main.table$var_[seq(2, nrow(main.table), by = 2)] <- ""
   names(main.table) <- c("Variables", paste0("Model ", 0:(non_empty-1))) 
+  
+  }, error=function(e){cat("ERROR :", conditionMessage(e), "\n")})
+  
   return(main.table)}
 
 #' Compare regression models, which is compatible with the reg.table output # updated 9/13/2018 #
@@ -137,6 +149,7 @@ combine_long_tab <- function(tbl_1, tbl_2, tbl_3=NULL, tbl_4=NULL, tbl_5=NULL, t
 #' compare_models(m1, m2)
 #' 
 #' @importFrom stats anova logLik
+#' @importFrom magrittr %>%
 #' @import purrr 
 #' @import MuMIn
 #' @export
@@ -145,6 +158,8 @@ compare_models <- function(model1, model2, model3=NULL, model4=NULL, model5=NULL
                         likelihood.only = FALSE, round.digit = 3, 
                         main.effect.only = NULL,
                         intn.effect.only = NULL){
+  
+  tryCatch({
   
   list_all <- list(model1, model2, model3, model4, model5, model6, model7, model8, model9, model10, model11, model12, model13, model14, model15, model16, model17, model18, model19, model20)
   non_empty <- length(list_all) - sum(unlist(purrr::map(list_all, is.null)))
@@ -226,5 +241,8 @@ compare_models <- function(model1, model2, model3=NULL, model4=NULL, model5=NULL
   compare.df <- data.frame(Variables=row.names(compare.df),compare.df) 
   }
   names(compare.df) <- c("Variables", paste0("Model ", 0:(non_empty-1))) 
+  
+  }, error=function(e){cat("ERROR :", conditionMessage(e), "\n")})
+  
   return(compare.df)
 }

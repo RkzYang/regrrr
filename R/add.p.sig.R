@@ -4,7 +4,9 @@
 #' @param df a data.frame of regression result
 #' @export
 add.n.r <- function(df){
+  tryCatch({
   data.frame(n.r=1:nrow(df), df)
+  }, error=function(e){cat("ERROR :", conditionMessage(e), "\n")})
 }
 
 #' Add approximate p-value based on t score or z score, when sample size is large
@@ -15,10 +17,13 @@ add.n.r <- function(df){
 #' @importFrom stats pnorm
 #' @export
 add.pr <- function(df, z.col = 3, p.already=FALSE){
+          tryCatch({  
                               if(p.already==FALSE){
                 data.frame(n.r=1:nrow(df), df, prob.=2 * (1 - pnorm(abs(df[,z.col]))))}else{
                 data.frame(n.r=1:nrow(df), df, prob.=df[,3])
-               }
+                }
+  
+          }, error=function(e){cat("ERROR :", conditionMessage(e), "\n")})
               }
 
 #' Add significance level marks to the regression result
@@ -26,10 +31,15 @@ add.pr <- function(df, z.col = 3, p.already=FALSE){
 #' @param df a data.frame of regression result, e.g. summary(a_lm_model)$coefficients
 #' @param Pr.col the column number of p.value
 #' @export
-add.sig <- function(df, Pr.col = 5){data.frame(df, sig=ifelse(df[,Pr.col]<0.001, paste0(rep("\x2a", 3), collapse = ""),
+add.sig <- function(df, Pr.col = 5){
+                          tryCatch({
+                                    data.frame(df, sig=ifelse(df[,Pr.col]<0.001, paste0(rep("\x2a", 3), collapse = ""),
                                                              ifelse(df[,Pr.col]<0.01, paste0(rep("\x2a", 2), collapse = ""),
                                                                    ifelse(df[,Pr.col]<0.05, paste0(rep("\x2a", 1), collapse = ""),
-                                                                          ifelse(df[,Pr.col]<0.1,"\xe2\x80\xa0","")))))}
+                                                                          ifelse(df[,Pr.col]<0.1,"\xe2\x80\xa0","")))))
+  
+                                    }, error=function(e){cat("ERROR :", conditionMessage(e), "\n")})
+                                    }
 
 # format.reg.table.survival <- function(df, d=d){
 #   df <- data.frame(n.r=1:nrow(df),df)

@@ -9,7 +9,11 @@
 #' }
 #' 
 #' @export
-load.pkgs <- function(pkg_name_vec){invisible(suppressMessages(lapply(pkg_name_vec, require, character.only = TRUE)))}
+load.pkgs <- function(pkg_name_vec){
+  tryCatch({
+  invisible(suppressMessages(lapply(pkg_name_vec, require, character.only = TRUE)))
+  }, error=function(e){cat("ERROR :", conditionMessage(e), "\n")})
+    }
   
   
 
