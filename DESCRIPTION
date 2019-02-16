@@ -3,8 +3,16 @@ Type: Package
 Title: Toolkit for Compiling, Testing, and Plotting Regression Result
 Version: 0.1.0
 Depends: R (>= 3.5.0)
-Author: R.K. Yang; Luyao Peng
-Maintainer: R.K. Yang <rkzyang@gmail.com>
+Authors@R: 
+    c(person(given = "Rui",
+           family = "Yang",
+           role = c("aut", "cre"),
+           email = "rkzyang@gmail.com"),
+      person(given = "Luyao",
+           family = "Peng",
+           role = c("aut"),
+           email = "luyaopeng.cn@gmail.com"))
+Maintainer: Rui K. Yang <rkzyang@gmail.com>
 Description: Compiling Regression Results for Management Journals. Compiling Regression Results to Tables. Plotting Regression Results to Graphs.
 License: GPL-3 
 Encoding: UTF-8
@@ -21,4 +29,5 @@ Imports: stats,
          stringr,
          spatstat,
          MuMIn,
-         ggplot2
+         ggplot2,
+         rlang

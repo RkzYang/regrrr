@@ -4,13 +4,18 @@
 \alias{check_na_in}
 \title{quickly check the proportion of NAs in each columns of a dataframe}
 \usage{
-check_na_in(df, true_total = FALSE)
+check_na_in(data, true_total = FALSE)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{data}{a data.frame}
 
 \item{true_total}{FALSE to show the percentage, TRUE to show the true number of missing values}
 }
 \description{
 quickly check the proportion of NAs in each columns of a dataframe
+}
+\examples{
+data(mtcars)
+check_na_in(mtcars)
+
 }

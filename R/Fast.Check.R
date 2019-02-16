@@ -1,22 +1,31 @@
 #' quickly check the vifs in a regression model; for checking multi-collinearity 
 #'
-#' @param model_df a data.frame used in regression model
+#' @param data a data.frame used in regression model
+#' @examples
+#' data(mtcars)
+#' model <- lm(mpg ~ vs + carb + hp + wt + wt * hp , data = mtcars)
+#' check_vif(data = model$model)
+#' 
 #' @import usdm
 #' @export
-reg.Vif <- function(model_df){
-  usdm::vif(model_df[,which(sapply(model_df, class) %in% c("numeric","integer","AsIs"))][,-1])
+check_vif <- function(data){
+  usdm::vif(data[, which(sapply(data, class) %in% c("numeric","integer","AsIs"))][,-1])
 }
 
 #' quickly check correlation matrix, or the correlation between a particular X and all other vars 
-#' can be useful for looking for relevant instrument
+#' could be useful for looking for relevant instrument
 #'
-#' @param model_df a data.frame used in regression model
+#' @param data a data.frame used in regression model
 #' @param var_name_select to specify the variable names to be included in the table, default is NULL--all variables are included
 #' @param d number of digits retained after the decimal point
+#' @examples 
+#' data(mtcars)
+#' check_cor(mtcars)
+#' 
 #' @importFrom stats cor
 #' @export
-reg.Cor <- function(model_df, var_name_select = NULL, d = 3){
-  cor.matrix <- round(cor(model_df[,which(sapply(model_df, class) %in% c("numeric","integer","AsIs"))]), d)
+check_cor <- function(data, var_name_select = NULL, d = 3){
+  cor.matrix <- round(cor(data[,which(sapply(data, class) %in% c("numeric","integer","AsIs"))]), d)
   if(is.null(var_name_select)){
     result <- cor.matrix
   }else{
@@ -28,15 +37,19 @@ reg.Cor <- function(model_df, var_name_select = NULL, d = 3){
 
 #' quickly check the proportion of NAs in each columns of a dataframe 
 #'
-#' @param df a data.frame
+#' @param data a data.frame
 #' @param true_total FALSE to show the percentage, TRUE to show the true number of missing values
+#' @examples 
+#' data(mtcars)
+#' check_na_in(mtcars)
+#' 
 #' @importFrom scales percent
 #' @export
-check_na_in <- function(df, true_total = FALSE){
+check_na_in <- function(data, true_total = FALSE){
   if(true_total == FALSE){
-    result <- scales::percent(sapply(df, function(x) sum(is.na(x)))/nrow(df))
-    names(result) <- names(df)}else{
-      result <- sapply(df, function(x) sum(is.na(x)))  
+    result <- scales::percent(sapply(data, function(x) sum(is.na(x)))/nrow(data))
+    names(result) <- names(data)}else{
+      result <- sapply(data, function(x) sum(is.na(x)))  
     }
   return(result)
 }

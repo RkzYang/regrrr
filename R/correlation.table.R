@@ -1,25 +1,31 @@
 #' make the correlation matrix from the data.frame used in regression
 #'
-#' @param model_df a data.frame used in regression model, e.g. model$model
-#' @param model_df_to_combine another data.frame used for regression model, e.g. when you have similar set of X's but different Y's
-#' @param var_name_select specify the names of regression variables to be included in the correlation matrix
-#' @param all.var.names all variable names, a string vector
+#' @param data a data.frame used in regression model, e.g. model$model
+#' @param data_to_combine another data.frame used for regression model, e.g. when you have similar set of X's but different Y's
+#' @param var_name_select optional: to specify the variable names used in regression to be included in the correlation matrix
+#' @param all.var.names optional: to rename all variable names, a string vector
 #' @param d number of decimal places to retain
+#' 
+#' @examples 
+#' data(mtcars)
+#' model <- lm(mpg ~ vs + carb + hp + wt + wt * hp , data = mtcars)
+#' cor.table(data = model$model)
+#' 
 #' @import dplyr
 #' @import tidyr
 #' 
 #' @export
-reg.Cor.Table <- function(model_df, model_df_to_combine = NULL, var_name_select = NULL, all.var.names = NULL , d = 2){
+cor.table <- function(data, data_to_combine = NULL, var_name_select = NULL, all.var.names = NULL , d = 2){
   # allow addtional data.frame (same structured) from addtional models  
-  if(!is.null(model_df_to_combine) && all.equal(dim(model_df), dim(model_df_to_combine))){
-    intersec <- dplyr::intersect(names(model_df), names(model_df_to_combine))
-    union_ <- dplyr::union(names(model_df), names(model_df_to_combine))
+  if(!is.null(data_to_combine) && all.equal(dim(data), dim(data_to_combine))){
+    intersec <- dplyr::intersect(names(data), names(data_to_combine))
+    union_ <- dplyr::union(names(data), names(data_to_combine))
     y1_y1 <- union_[! union_ %in% intersec]
-    model_df <- dplyr::bind_cols(model_df, model_df_to_combine)
-    model_df <- model_df[,c(y1_y1, intersec)] # re-order vars
+    data <- dplyr::bind_cols(data, data_to_combine)
+    data <- data[,c(y1_y1, intersec)] # re-order vars
   }
   # filter numeric values
-  df <- model_df[, which(sapply(model_df, class) %in% c("numeric","integer","AsIs"))]
+  df <- data[, which(sapply(data, class) %in% c("numeric","integer","AsIs"))]
   cor.matrix <- cor(df)
   # allow user to select variabels
   if(!is.null(var_name_select)){

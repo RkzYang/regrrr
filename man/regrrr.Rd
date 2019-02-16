@@ -9,7 +9,7 @@
 Compiling, Testing, Plotting Regression Results
 }
 \author{
-R.K. Yang \email{rkzyang@gmail.com}
+Rui K. Yang \email{rkzyang@gmail.com}
 
 Luyao Peng \email{luyaopeng.cn@gmail.com}
 }

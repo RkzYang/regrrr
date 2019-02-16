@@ -12,3 +12,7 @@ scale_01(x)
 \description{
 Scale a vector into a 0-1 scale
 }
+\examples{
+scale_01(rnorm(100, 1, 1))
+
+}

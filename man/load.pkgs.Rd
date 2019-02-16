@@ -12,3 +12,9 @@ load.pkgs(pkg_name_vec)
 \description{
 load multiple packages
 }
+\examples{
+\dontrun{
+load.pkgs(c("dplyr", "car", "purrr"))
+}
+
+}

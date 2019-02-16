@@ -1,6 +1,5 @@
-#' plotting the interaction, with or without multiple interactions, FROM the model prediction
-#' by creating a hypothetical dataset 
-#' 
+#' plotting the marginal effect of X on Y, with or without one or multiple interaction terms
+#'  
 #' @param reg.coef a coefficient data.frame of regression result
 #' @param data the data used in regression, a data frame
 #' @param model.for.predict the model object, such as a "lm" object
@@ -27,21 +26,42 @@
 #' @param y.low.lim specify the lower limit of y
 #' 
 #' @examples
-#'
 #' data(mtcars)
-#' model <- lm(mpg ~ vs + carb + hp + wt + wt * hp , data = mtcars)
-#' reg.gg.from.model(reg.coef = summary(model)$coefficients, 
-#'                  data = mtcars, model.for.predict = model, 
+#' m1 <- lm(mpg ~ vs + carb + hp + wt + wt * hp , data = mtcars)
+#' plot_effect(reg.coef = summary(m1)$coefficients, 
+#'                  data = mtcars, model.for.predict = m1, 
 #'                  x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp", 
 #'                  confidence_interval = TRUE,  CI_Ribbon = TRUE, 
 #'                  xlab = "Weight", ylab = "MPG", moderator.lab = "Horsepower")
+#' 
+#' #' @examples
+#' data(mtcars)
+#' m2 <- lm(mpg ~ vs + carb + hp + wt + wt * hp + wt * vs, data = mtcars)
+#' plot_effect(reg.coef = summary(m2)$coefficients, 
+#'             data = mtcars, model.for.predict = m2, 
+#'             x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp", 
+#'             confidence_interval = TRUE,  CI_Ribbon = FALSE, 
+#'             xlab = "Weight", ylab = "MPG", moderator.lab = "Horsepower")
+#' 
+#' @examples
+#'\dontrun{
+#' # this shows the function is compatible with ggplot2 customization
+#' library(extrafont)
+#' m1 <- lm(mpg ~ vs + carb + hp + wt + wt * hp , data = mtcars)
+#' plot_effect(reg.coef = summary(m1)$coefficients, 
+#'                  data = mtcars, model.for.predict = m1, 
+#'                  x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp", 
+#'                  confidence_interval = TRUE,  CI_Ribbon = TRUE, 
+#'                  xlab = "Weight", ylab = "MPG", moderator.lab = "Horsepower") + 
+#' ggplot2::theme(text=ggplot2::element_text(family="Times New Roman", size = 16))
+#'}
 #' 
 #' @importFrom stats quantile median sd predict vcov model.matrix
 #' @importFrom robustbase colMedians
 #' @import stringr
 #' @import ggplot2
 #' @export
-reg.gg.from.model <- function(reg.coef, data, model.for.predict, by_color=FALSE, x_var.name = NULL, y_var.name = NULL, moderator.name=NULL, 
+plot_effect <- function(reg.coef, data, model.for.predict, by_color=FALSE, x_var.name = NULL, y_var.name = NULL, moderator.name=NULL, 
                               min_x=0.001, max_x=0.999, 
                               mdrt_quantile_05=NULL, mdrt_quantile_50=NULL, mdrt_quantile_95=NULL, 
                               mod.n.sd=1,
@@ -89,7 +109,7 @@ reg.gg.from.model <- function(reg.coef, data, model.for.predict, by_color=FALSE,
   min.x <- quantile(unlist(df[rownames(reg.result)[main1.r]]), probs=min_x, rm.na=TRUE) %>% as.numeric()
   max.x <- quantile(unlist(df[rownames(reg.result)[main1.r]]), probs=max_x, rm.na=TRUE) %>% as.numeric()
   
-  # 4 make a fake data (all other variables other than x and moderator are held to median or mean) set for plotting
+  # 4 make a hypothetical dataset (all other variables other than x and moderator are held to median or mean) for plotting
   main.x.name <- x_var.name
   modrtr.name <- moderator.name
   
@@ -182,20 +202,32 @@ reg.gg.from.model <- function(reg.coef, data, model.for.predict, by_color=FALSE,
    }
   }else{ 
   # plotting confidence intervals (of the regression slope)
+    
+  # calculate CI mannually
   # ref: https://stackoverflow.com/questions/14033551/r-plotting-confidence-bands-with-ggplot
   # construct the lwr_ and upr_ into df.fake
-  V <- vcov(model.for.predict)
-  design_names <- colnames(model.matrix(model.for.predict))
-  df.fake[, design_names[1]] <- rep(1, nrow(df.fake))
-  df.fake[, paste0(x_var.name, ":", moderator.name)] <- df.fake[, x_var.name] * df.fake[, moderator.name]
-  df.fake[, paste0(moderator.name, ":", x_var.name)] <- df.fake[, moderator.name] * df.fake[, x_var.name]
-  X <- as.matrix(df.fake[, design_names])
-  df.fake$fit <- predict(model.for.predict, df.fake)
-  se.fit <- sqrt(diag(X %*% V %*% t(X)))
-  df.fake$lwr_ <- df.fake$fit - 1.96*se.fit
-  df.fake$upr_ <- df.fake$fit + 1.96*se.fit
-  lwr_ <- df.fake$fit - 1.96*se.fit
-  upr_ <- df.fake$fit + 1.96*se.fit
+  # V <- vcov(model.for.predict)
+  # design_names <- colnames(model.matrix(model.for.predict))
+  # df.fake[, design_names[1]] <- rep(1, nrow(df.fake))
+  # 
+  # df.fake[, paste0(x_var.name, ":", moderator.name)] <- df.fake[, x_var.name] * df.fake[, moderator.name]
+  # df.fake[, paste0(moderator.name, ":", x_var.name)] <- df.fake[, moderator.name] * df.fake[, x_var.name]
+  # 
+  # X <- as.matrix(df.fake[, design_names])
+  # 
+  # df.fake$fit <- predict(model.for.predict, df.fake)
+  # 
+  # se.fit <- sqrt(diag(X %*% V %*% t(X)))
+  # df.fake$lwr_ <- df.fake$fit - 1.96*se.fit
+  # df.fake$upr_ <- df.fake$fit + 1.96*se.fit
+  
+  predicted <- data.frame(predict(model.for.predict, df.fake, interval = "confidence"))[, 2:3]
+  names(predicted) <- c("lwr_", "upr_")
+  df.fake <- cbind(df.fake, predicted)
+  
+  # avoid note
+  lwr_ <- df.fake$lwr_ 
+  upr_ <- df.fake$upr_ 
   mod.level <- df.fake$mod.level
   
   if(by_color == FALSE){
@@ -205,14 +237,14 @@ reg.gg.from.model <- function(reg.coef, data, model.for.predict, by_color=FALSE,
          ggplot2::geom_line(ggplot2::aes(linetype = mod.level)) +
          ggplot2::scale_x_continuous(limits=c(min.x, max.x), xlab) +
          ggplot2::scale_y_continuous(limits=c(y.low.lim, y.hi.lim), ylab) +
-         ggplot2::geom_errorbar(aes(ymin = lwr_, ymax = upr_), alpha = 0.16)
+         ggplot2::geom_errorbar(ggplot2::aes(ymin = lwr_, ymax = upr_), alpha = 0.16)
   }else{
     p <- ggplot2::ggplot(df.fake, ggplot2::aes_string(x=x_var.name, y=y_var.name, fill = "mod.level")) +
         ggplot2::guides(fill=FALSE) +
         ggplot2::geom_line(ggplot2::aes(linetype = mod.level)) +
         ggplot2::scale_x_continuous(limits=c(min.x, max.x), xlab) +
         ggplot2::scale_y_continuous(limits=c(y.low.lim, y.hi.lim), ylab) +
-        ggplot2::geom_ribbon(aes(ymin = lwr_, ymax = upr_), alpha = 0.6) +
+        ggplot2::geom_ribbon(ggplot2::aes(ymin = lwr_, ymax = upr_), alpha = 0.6) +
         ggplot2::scale_fill_grey()
     }
     
@@ -228,14 +260,14 @@ reg.gg.from.model <- function(reg.coef, data, model.for.predict, by_color=FALSE,
       ggplot2::geom_line(ggplot2::aes(color = mod.level)) +
       ggplot2::scale_x_continuous(limits=c(min.x, max.x), xlab) +
       ggplot2::scale_y_continuous(limits=c(y.low.lim, y.hi.lim), ylab) +
-      ggplot2::geom_errorbar(aes(ymin = lwr_, ymax = upr_), alpha = 0.16)
+      ggplot2::geom_errorbar(ggplot2::aes(ymin = lwr_, ymax = upr_), alpha = 0.16)
     }else{
     p <- ggplot2::ggplot(df.fake, ggplot2::aes_string(x=x_var.name, y=y_var.name, fill = "mod.level")) +
       ggplot2::guides(fill=FALSE) +
       ggplot2::geom_line(ggplot2::aes(color = mod.level)) +
       ggplot2::scale_x_continuous(limits=c(min.x, max.x), xlab) +
       ggplot2::scale_y_continuous(limits=c(y.low.lim, y.hi.lim), ylab) +
-      ggplot2::geom_ribbon(aes(ymin = lwr_, ymax = upr_), alpha = 0.6)
+      ggplot2::geom_ribbon(ggplot2::aes(ymin = lwr_, ymax = upr_), alpha = 0.6)
     }
     
     if(!is.null(mdrt.mid.name)){

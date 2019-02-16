@@ -2,15 +2,15 @@
 % Please edit documentation in R/add.p.sig.R
 \name{add.sig}
 \alias{add.sig}
-\title{Add significance marks to the regression result}
+\title{Add significance level marks to the regression result}
 \usage{
 add.sig(df, Pr.col = 5)
 }
 \arguments{
-\item{df}{a data.frame of regression result}
+\item{df}{a data.frame of regression result, e.g. summary(a_lm_model)$coefficients}
 
 \item{Pr.col}{the column number of p.value}
 }
 \description{
-Add significance marks to the regression result
+Add significance level marks to the regression result
 }
