@@ -96,7 +96,7 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
   mdrt.r  <- which(rownames(reg.result) == moderator.name) 
 
   # 2 set moderator levels (low, mid, high)
-  if(is.null(mdrt.r)){
+  if(length(mdrt.r) == 0){
     mdrt.low  <- 0
     mdrt.mid  <- 0
     mdrt.high <- 0
@@ -166,8 +166,11 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
                             mod = rep(c(mdrt.low, mdrt.high), each=50),
                             mod.level = rep(c(mdrt.low.name, mdrt.high.name), each=50),
                             df.fake.other.var[1:100,])
-    }
-  names(df.fake)[1:2] <- c(main.x.name, modrtr.name) 
+  }
+  if(!is.null(moderator.name)){
+  names(df.fake)[1:2] <- c(main.x.name, modrtr.name)}else{
+  names(df.fake)[1]   <-   main.x.name  
+  }
   
   if(class(df.other.var) == "numeric" && length(factor.name) == 0){
     names(df.fake)[which(stringr::str_detect(names(df.fake), "df.fake.other.var"))] <- other_continuous_var_names
@@ -253,7 +256,7 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
          ggplot2::geom_line(ggplot2::aes(linetype = mod.level)) +
          ggplot2::scale_x_continuous(limits=c(min.x, max.x), xlab) +
          ggplot2::scale_y_continuous(limits=c(y.low.lim, y.high.lim), ylab) +
-         ggplot2::geom_errorbar(ggplot2::aes(ymin = lwr_, ymax = upr_), alpha = 0.16)
+         ggplot2::geom_errorbar(ggplot2::aes(ymin = lwr_, ymax = upr_), alpha = 0.116)
   }else{
     p <- ggplot2::ggplot(df.fake, ggplot2::aes_string(x=x_var.name, y=y_var.name, fill = "mod.level")) +
         ggplot2::guides(fill=FALSE) +
@@ -267,7 +270,7 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
     if(!is.null(mdrt.mid.name)){
       p <- p + ggplot2::scale_linetype_manual(moderator.lab, values=c("solid", "dashed", "dotted"))
     }else{
-      p <- p + ggplot2::scale_linetype_manual(moderator.lab, values=c("solid", "dotted"))
+      p <- p + ggplot2::scale_linetype_manual(moderator.lab, values=c("solid", "dashed"))
     }
   }else{
     if(CI_Ribbon == FALSE){
@@ -276,7 +279,7 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
       ggplot2::geom_line(ggplot2::aes(color = mod.level)) +
       ggplot2::scale_x_continuous(limits=c(min.x, max.x), xlab) +
       ggplot2::scale_y_continuous(limits=c(y.low.lim, y.high.lim), ylab) +
-      ggplot2::geom_errorbar(ggplot2::aes(ymin = lwr_, ymax = upr_), alpha = 0.16)
+      ggplot2::geom_errorbar(ggplot2::aes(ymin = lwr_, ymax = upr_), alpha = 0.116)
     }else{
     p <- ggplot2::ggplot(df.fake, ggplot2::aes_string(x=x_var.name, y=y_var.name, fill = "mod.level")) +
       ggplot2::guides(fill=FALSE) +
@@ -293,6 +296,7 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
     }
    }
   }
+  
   # customize #
   p <- p + ggplot2::theme_light() + 
    # ggplot2::theme(text=ggplot2::element_text(family="Times New Roman", size = 16)) + # library(extrafont)

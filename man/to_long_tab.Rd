@@ -7,7 +7,7 @@
 to_long_tab(reg.coef, d = 3, t.value.col = 3, Pr.col = 4)
 }
 \arguments{
-\item{reg.coef}{a data.frame of regression result, e.g. summary(lm_model)$coef}
+\item{reg.coef}{a data.frame (or matrix) of regression result or a coeftest object, e.g. summary(lm_model)$coef, coeftest(lm_model, cluster.vcov(lm_model, cbind(data$group1,  data$group2)))}
 
 \item{d}{number of decimal places to retain}
 

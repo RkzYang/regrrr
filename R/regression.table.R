@@ -1,6 +1,6 @@
 #' Convert the regression result to the long format: the standard errors are in parentheses and beneath the betas
 #'
-#' @param reg.coef a data.frame of regression result, e.g. summary(lm_model)$coef
+#' @param reg.coef a data.frame (or matrix) of regression result or a coeftest object, e.g. summary(lm_model)$coef, coeftest(lm_model, cluster.vcov(lm_model, cbind(data$group1,  data$group2)))
 #' @param d number of decimal places to retain
 #' @param t.value.col col number of the t-score in the reg.coef data.frame
 #' @param Pr.col col number of the Prob.(>|t|)) in the reg.coef data.frame
@@ -19,8 +19,14 @@
 #' @export
 to_long_tab <- function(reg.coef, d = 3, t.value.col = 3, Pr.col = 4){
   
+  if(!class(reg.coef) %in% c("matrix", "data.frame", "coeftest")){stop("reg.coef needs to be a data.frame or an coeftest object")}
+  
   tryCatch({
   
+  if(class(reg.coef) == "coeftest"){
+      reg.coef <- as.data.frame(`[`(reg.coef))
+  }  
+    
   if(! "n.r" %in% colnames(reg.coef)){
     reg.coef <- data.frame(n.r = 1:nrow(reg.coef), reg.coef)
   }
