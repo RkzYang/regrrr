@@ -2,11 +2,7 @@ Package: regrrr
 Type: Package
 Title: Toolkit for Compiling, (Post-Hoc) Testing, and Plotting Regression Results
 Version: 0.1.0
-Description: Compiling regression results into a publishable format, 
-    conducting post-hoc hypothesis testing, and plotting moderating effects. Saving headaches for
-    "theory-driven" researchers in social science who value the interpretability of independent variables (X),  
-    theorize on the mechanisms (why X affects Y), and look for the boundary conditions (moderating effect) 
-    of the main effect (the effect of X on Y becomes stronger/weaker as Z increases).
+Description: Compiling regression results into a publishable format, conducting post-hoc hypothesis testing, and plotting moderating effects (the effect of X on Y becomes stronger/weaker as Z increases).
 Depends: R (>= 3.5.0)
 Authors@R: 
     c(person(given = "Rui K.",
