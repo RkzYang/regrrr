@@ -1,5 +1,6 @@
 # regrrr (Toolkit for Compiling and Plotting Regression Results)
 [![Rdoc](http://www.rdocumentation.org/badges/version/regrrr)](http://www.rdocumentation.org/packages/regrrr) 
+[![](https://cranlogs.r-pkg.org/badges/regrrr)](https://cran.r-project.org/package=regrrr)
 
 # Description
 Compiling regression results into a publishable format, conducting post-hoc hypothesis testing, and plotting moderating effects (the effect of X on Y becomes stronger/weaker as Z increases).
