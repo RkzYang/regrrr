@@ -1,5 +1,5 @@
 # regrrr (Toolkit for Compiling and Plotting Regression Results)
-[![Rdoc](http://www.rdocumentation.org/badges/version/regrrr)](http://www.rdocumentation.org/packages/regrrr) 
+[![Rdoc](http://www.rdocumentation.org/badges/version/regrrr)](http://www.rdocumentation.org/packages/regrrr)
 [![](https://cranlogs.r-pkg.org/badges/regrrr)](https://cran.r-project.org/package=regrrr)
 
 # Description
