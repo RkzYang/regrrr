@@ -4,15 +4,7 @@ Title: Toolkit for Compiling, (Post-Hoc) Testing, and Plotting Regression Result
 Version: 0.1.0
 Description: Compiling regression results into a publishable format, conducting post-hoc hypothesis testing, and plotting moderating effects (the effect of X on Y becomes stronger/weaker as Z increases).
 Depends: R (>= 3.5.0)
-Authors@R: 
-    c(person(given = "Rui K.",
-           family = "Yang",
-           role = c("aut", "cre"),
-           email = "rkzyang@gmail.com"),
-      person(given = "Luyao",
-           family = "Peng",
-           role = c("aut"),
-           email = "luyaopeng.cn@gmail.com"))
+Authors@R: c(person(given = "Rui K.", family = "Yang", role = c("aut", "cre"), email = "rkzyang@gmail.com"), person(given = "Luyao", family = "Peng", role = c("aut"), email = "luyaopeng.cn@gmail.com"))
 Maintainer: Rui K. Yang <rkzyang@gmail.com>
 License: GPL-3 
 Encoding: UTF-8
@@ -32,3 +24,4 @@ Imports: stats,
          MuMIn,
          ggplot2,
          rlang
+BugReports: https://github.com/RayKYang/regrrr/issues

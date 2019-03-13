@@ -1,5 +1,5 @@
 #' significance of regression slope (the marginal effect) under moderation
-#' testing restriction: the sig. of beta_x under the moderation of z1, with or without additional interaction terms, Aug 13th
+#' testing restriction: the sig. of beta_x under the moderation of z1, with or without additional interaction terms (z2, z3, etc.)
 #'
 #' @param reg.coef a data.frame (or matrix) of regression result or a coeftest object, e.g. summary(lm_model)$coef, coeftest(lm_model, cluster.vcov(lm_model, cbind(data$group1,  data$group2)))
 #' @param v a customized variance-covariance matrix
