@@ -29,19 +29,19 @@
 #' @examples
 #' data(mtcars)
 #' m1 <- lm(mpg ~ vs + carb + hp + wt + wt * hp , data = mtcars)
-#' plot_effect(reg.coef = summary(m1)$coefficients, 
-#'                  data = mtcars, model = m1, 
-#'                  x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp", 
-#'                  confidence_interval = TRUE,  CI_Ribbon = TRUE, 
+#' plot_effect(reg.coef = summary(m1)$coefficients,
+#'                  data = mtcars, model = m1,
+#'                  x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp",
+#'                  confidence_interval = TRUE,  CI_Ribbon = TRUE,
 #'                  xlab = "Weight", ylab = "MPG", moderator.lab = "Horsepower")
 #' 
 #' #' @examples
 #' data(mtcars)
 #' m2 <- lm(mpg ~ vs + carb + hp + wt + wt * hp + wt * vs, data = mtcars)
-#' plot_effect(reg.coef = summary(m2)$coefficients, 
-#'             data = mtcars, model = m2, 
-#'             x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp", 
-#'             confidence_interval = TRUE,  CI_Ribbon = FALSE, 
+#' plot_effect(reg.coef = summary(m2)$coefficients,
+#'             data = mtcars, model = m2,
+#'             x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp",
+#'             confidence_interval = TRUE,  CI_Ribbon = FALSE,
 #'             xlab = "Weight", ylab = "MPG", moderator.lab = "Horsepower")
 #' 
 #' @examples
@@ -92,7 +92,10 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
     
     lspline.names <- rownames(reg.result)[stringr::str_detect(rownames(reg.result), pattern = "lspline")]
     lspline.name_ <- unique(unlist(purrr::map(lspline.names, function(x) stringr::str_extract(x, pattern = "(?<=\\().*?(?=\\))")[1])))
-    lspline.name <- strsplit(lspline.name_, ",")[[1]][1]
+    if(!is.null(lspline.name_)){
+    lspline.name <- strsplit(lspline.name_, ",")[[1]][1]}else{
+      lspline.name <- NULL  
+    }
     
     non.factor.names <- names(df)[names(df) %in% rownames(reg.result)]
     
@@ -170,7 +173,7 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
       df.fake.other.var <- cbind(df.fake.factor.var, df.fake.other.var)
     }
     
-    if(length(lspline.name) > 0 & modrtr.name != lspline.name){
+    if(length(lspline.name) > 0 && modrtr.name != lspline.name){
       df.fake.other.var <- cbind(df.fake.lspline.var, df.fake.other.var)
     }
     
@@ -197,7 +200,7 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
     }
     
     # 4.4 when modertator is lspline, construct lspline moderator #####
-    if(modrtr.name == lspline.name){
+    if(!is.null(lspline.name) && modrtr.name == lspline.name){
       two_col <- eval(parse(text=paste0("lspline(df$",lspline.name_,")"))) %>% as.data.frame()
       eval(parse(text=strsplit(lspline.name_, ",")[[1]][2]))
       
@@ -370,7 +373,7 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
       }
     }
     
-    if(modrtr.name == lspline.name){
+    if(!is.null(lspline.name) && modrtr.name == lspline.name){
       p <- p + ggplot2::facet_wrap(~knots)
     }
     
