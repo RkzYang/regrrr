@@ -23,5 +23,6 @@ Imports: stats,
          spatstat,
          MuMIn,
          ggplot2,
-         rlang
+         rlang,
+         lspline
 BugReports: https://github.com/RayKYang/regrrr/issues
