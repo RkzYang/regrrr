@@ -2,7 +2,7 @@
 % Please edit documentation in R/scale_variable.R
 \name{scale_01}
 \alias{scale_01}
-\title{Scale a vector into a 0-1 scale}
+\title{Scale a vector into the 0-1 scale}
 \usage{
 scale_01(x)
 }
@@ -10,9 +10,5 @@ scale_01(x)
 \item{x}{a vector}
 }
 \description{
-Scale a vector into a 0-1 scale
-}
-\examples{
-scale_01(rnorm(100, 1, 1))
-
+Scale a vector into the 0-1 scale
 }

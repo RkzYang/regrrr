@@ -33,25 +33,25 @@ compare_models(model1, model2, model3 = NULL, model4 = NULL,
 
 \item{model10}{the 10th regression model}
 
-\item{model11}{the 10th regression model}
+\item{model11}{the 11th regression model}
 
-\item{model12}{the 10th regression model}
+\item{model12}{the 12th regression model}
 
-\item{model13}{the 10th regression model}
+\item{model13}{the 13th regression model}
 
-\item{model14}{the 10th regression model}
+\item{model14}{the 14th regression model}
 
-\item{model15}{the 10th regression model}
+\item{model15}{the 15th regression model}
 
-\item{model16}{the 10th regression model}
+\item{model16}{the 16th regression model}
 
-\item{model17}{the 10th regression model}
+\item{model17}{the 17th regression model}
 
-\item{model18}{the 10th regression model}
+\item{model18}{the 18th regression model}
 
-\item{model19}{the 10th regression model}
+\item{model19}{the 19th regression model}
 
-\item{model20}{the 10th regression model}
+\item{model20}{the 20th regression model}
 
 \item{likelihood.only}{whether or not to output the likelihood}
 

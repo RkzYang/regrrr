@@ -8,6 +8,13 @@
 \description{
 Compiling, Testing, Plotting Regression Results
 }
+\seealso{
+Useful links:
+\itemize{
+  \item Report bugs at \url{https://github.com/RayKYang/regrrr/issues}
+}
+
+}
 \author{
 Rui K. Yang \email{rkzyang@gmail.com}
 

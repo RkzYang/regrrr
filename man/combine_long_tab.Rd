@@ -31,25 +31,25 @@ combine_long_tab(tbl_1, tbl_2, tbl_3 = NULL, tbl_4 = NULL,
 
 \item{tbl_10}{the 10th data.frame of regression result}
 
-\item{tbl_11}{the 10th data.frame of regression result}
+\item{tbl_11}{the 11th data.frame of regression result}
 
-\item{tbl_12}{the 10th data.frame of regression result}
+\item{tbl_12}{the 12th data.frame of regression result}
 
-\item{tbl_13}{the 10th data.frame of regression result}
+\item{tbl_13}{the 13th data.frame of regression result}
 
-\item{tbl_14}{the 10th data.frame of regression result}
+\item{tbl_14}{the 14th data.frame of regression result}
 
-\item{tbl_15}{the 10th data.frame of regression result}
+\item{tbl_15}{the 15th data.frame of regression result}
 
-\item{tbl_16}{the 10th data.frame of regression result}
+\item{tbl_16}{the 16th data.frame of regression result}
 
-\item{tbl_17}{the 10th data.frame of regression result}
+\item{tbl_17}{the 17th data.frame of regression result}
 
-\item{tbl_18}{the 10th data.frame of regression result}
+\item{tbl_18}{the 18th data.frame of regression result}
 
-\item{tbl_19}{the 10th data.frame of regression result}
+\item{tbl_19}{the 19th data.frame of regression result}
 
-\item{tbl_20}{the 10th data.frame of regression result}
+\item{tbl_20}{the 20th data.frame of regression result}
 }
 \description{
 Combine regression results from different models by columns

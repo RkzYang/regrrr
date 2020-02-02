@@ -3,7 +3,7 @@
 \name{test_tilted_slopes}
 \alias{test_tilted_slopes}
 \title{significance of regression slope (the marginal effect) under moderation
-testing restriction: the sig. of beta_x under the moderation of z1, with or without additional interaction terms, Aug 13th}
+testing restriction: the sig. of beta_x under the moderation of z1, with or without additional interaction terms (z2, z3, etc.)}
 \usage{
 test_tilted_slopes(reg.coef, v = NULL, model, x_var.name, moderator.name,
   mod.n.sd = 1, data, t.value.col = 3, Pr.col = 4)
@@ -29,7 +29,7 @@ test_tilted_slopes(reg.coef, v = NULL, model, x_var.name, moderator.name,
 }
 \description{
 significance of regression slope (the marginal effect) under moderation
-testing restriction: the sig. of beta_x under the moderation of z1, with or without additional interaction terms, Aug 13th
+testing restriction: the sig. of beta_x under the moderation of z1, with or without additional interaction terms (z2, z3, etc.)
 }
 \examples{
 data(mtcars)

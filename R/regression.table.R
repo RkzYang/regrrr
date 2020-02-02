@@ -51,7 +51,7 @@ to_long_tab <- function(reg.coef, d = 3, t.value.col = 3, Pr.col = 4){
   key <- NULL
   
   test <- cbind(var_ = rownames(df), reg.coef[,c(1:3, ncol(reg.coef))])
-  digits <- function(x,d){ if(class(x)=="numeric") {formatC(x, format = "f", digits = d)} else{x} }
+  digits <- function(x,d){ if(class(x)[1]=="numeric") {formatC(x, format = "f", digits = d)} else{x} }
   test <- data.frame(purrr::map(test, digits, d)) 
   test <- tidyr::unite(test, Estimate, 3, 5, sep="") # this joins the beta_hat values with sig. marks
   test[,4]  <- paste0("(",test[,4],")") # this put the s.e.'s into parenthesis

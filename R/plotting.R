@@ -25,6 +25,7 @@
 #' @param mdrt.high.name the label of high-level moderator
 #' @param y.high.lim specify the upper limit of y
 #' @param y.low.lim specify the lower limit of y
+#' @param spline_labels label of the spline variable
 #' 
 #' @examples
 #' data(mtcars)
@@ -62,6 +63,7 @@
 #' @import stringr
 #' @import ggplot2
 #' @import lspline
+#' @importFrom stats knots
 #' @export
 plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NULL, y_var.name = NULL, moderator.name = NULL, 
                         min_x=0.001, max_x=0.999, 
