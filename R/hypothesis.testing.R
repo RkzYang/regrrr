@@ -31,9 +31,9 @@ test_tilted_slopes <- function(reg.coef, v = NULL, model, x_var.name, moderator.
 
   tryCatch({
     
-  if(!class(reg.coef) %in% c("matrix", "data.frame", "coeftest")){stop("reg.coef needs to be a data.frame or an coeftest object")}
+  if(!class(reg.coef)[1] %in% c("matrix", "data.frame", "coeftest")){stop("reg.coef needs to be a data.frame or an coeftest object")}
   
-  if(class(reg.coef) == "coeftest"){
+  if(class(reg.coef)[1] == "coeftest"){
     reg.coef <- as.data.frame(`[`(reg.coef))
   }
   

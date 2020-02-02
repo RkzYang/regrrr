@@ -74,7 +74,7 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
                         mdrt.low.name="Low", mdrt.mid.name=NULL, mdrt.high.name="High",
                         y.high.lim=NULL, y.low.lim=NULL, spline_labels=c("LHS", "RHS")){
   
-  if(class(reg.coef) == "coeftest"){
+  if(class(reg.coef)[1] == "coeftest"){
     reg.coef <- as.data.frame(`[`(reg.coef))
     if(is.null(v)){
       message("reminder (important): if standard errors are clustered, please specify v (a customized vcov) to plot confidencen intervals")}
@@ -153,7 +153,7 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
       df.fake.factor.var <- df.factor.var[rep(1,150),]}
     
     # 4.3 if there is only one "other" (continuous) variable #####
-    if(class(df.other.var) == "numeric"){
+    if(class(df.other.var)[1] == "numeric"){
       if(!is.null(mdrt_quantile_05))
       {
         df.fake.other.var <- data.frame(x = replicate(150, robustbase::colMedians(as.matrix(df.other.var), na.rm = TRUE)))
@@ -197,7 +197,7 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
         names(df.fake)[1]   <-   main.x.name  
       }
     
-    if(class(df.other.var) == "numeric" && length(factor.name) == 0){
+    if(class(df.other.var)[1] == "numeric" && length(factor.name) == 0){
       names(df.fake)[which(stringr::str_detect(names(df.fake), "df.fake.other.var"))] <- other_continuous_var_names
     }
     

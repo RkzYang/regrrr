@@ -19,11 +19,11 @@
 #' @export
 to_long_tab <- function(reg.coef, d = 3, t.value.col = 3, Pr.col = 4){
   
-  if(!class(reg.coef) %in% c("matrix", "data.frame", "coeftest")){stop("reg.coef needs to be a data.frame or an coeftest object")}
+  if(!class(reg.coef)[1] %in% c("matrix", "data.frame", "coeftest")){stop("reg.coef needs to be a data.frame or an coeftest object")}
   
   tryCatch({
   
-  if(class(reg.coef) == "coeftest"){
+  if(class(reg.coef)[1] == "coeftest"){
       reg.coef <- as.data.frame(`[`(reg.coef))
   }  
     
