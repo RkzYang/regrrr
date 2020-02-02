@@ -4,15 +4,34 @@
 \alias{plot_effect}
 \title{plotting the marginal effect of X on Y, with or without one or multiple interaction terms}
 \usage{
-plot_effect(reg.coef, data, model, by_color = FALSE, x_var.name = NULL,
-  y_var.name = NULL, moderator.name = NULL, min_x = 0.001,
-  max_x = 0.999, mdrt_quantile_05 = NULL, mdrt_quantile_50 = NULL,
-  mdrt_quantile_95 = NULL, mod.n.sd = 1, confidence_interval = FALSE,
-  v = NULL, CI_Ribbon = FALSE, title = NULL, xlab = "X_Var.name",
-  ylab = "Y_Var.name", moderator.lab = "Moderator_name",
-  mdrt.low.name = "Low", mdrt.mid.name = NULL,
-  mdrt.high.name = "High", y.high.lim = NULL, y.low.lim = NULL,
-  spline_labels = c("LHS", "RHS"))
+plot_effect(
+  reg.coef,
+  data,
+  model,
+  by_color = FALSE,
+  x_var.name = NULL,
+  y_var.name = NULL,
+  moderator.name = NULL,
+  min_x = 0.001,
+  max_x = 0.999,
+  mdrt_quantile_05 = NULL,
+  mdrt_quantile_50 = NULL,
+  mdrt_quantile_95 = NULL,
+  mod.n.sd = 1,
+  confidence_interval = FALSE,
+  v = NULL,
+  CI_Ribbon = FALSE,
+  title = NULL,
+  xlab = "X_Var.name",
+  ylab = "Y_Var.name",
+  moderator.lab = "Moderator_name",
+  mdrt.low.name = "Low",
+  mdrt.mid.name = NULL,
+  mdrt.high.name = "High",
+  y.high.lim = NULL,
+  y.low.lim = NULL,
+  spline_labels = c("LHS", "RHS")
+)
 }
 \arguments{
 \item{reg.coef}{a coefficient matrix of regression result, e.g. summary(lm_model)$coef}

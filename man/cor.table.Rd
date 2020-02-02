@@ -4,8 +4,13 @@
 \alias{cor.table}
 \title{make the correlation matrix from the data.frame used in regression}
 \usage{
-cor.table(data, data_to_combine = NULL, var_name_select = NULL,
-  all.var.names = NULL, d = 2)
+cor.table(
+  data,
+  data_to_combine = NULL,
+  var_name_select = NULL,
+  all.var.names = NULL,
+  d = 2
+)
 }
 \arguments{
 \item{data}{a data.frame used in regression model, e.g. model$model}

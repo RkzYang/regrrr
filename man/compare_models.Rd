@@ -4,13 +4,32 @@
 \alias{compare_models}
 \title{Compare regression models, which is compatible with the reg.table output # updated 9/13/2018 #}
 \usage{
-compare_models(model1, model2, model3 = NULL, model4 = NULL,
-  model5 = NULL, model6 = NULL, model7 = NULL, model8 = NULL,
-  model9 = NULL, model10 = NULL, model11 = NULL, model12 = NULL,
-  model13 = NULL, model14 = NULL, model15 = NULL, model16 = NULL,
-  model17 = NULL, model18 = NULL, model19 = NULL, model20 = NULL,
-  likelihood.only = FALSE, round.digit = 3, main.effect.only = NULL,
-  intn.effect.only = NULL)
+compare_models(
+  model1,
+  model2,
+  model3 = NULL,
+  model4 = NULL,
+  model5 = NULL,
+  model6 = NULL,
+  model7 = NULL,
+  model8 = NULL,
+  model9 = NULL,
+  model10 = NULL,
+  model11 = NULL,
+  model12 = NULL,
+  model13 = NULL,
+  model14 = NULL,
+  model15 = NULL,
+  model16 = NULL,
+  model17 = NULL,
+  model18 = NULL,
+  model19 = NULL,
+  model20 = NULL,
+  likelihood.only = FALSE,
+  round.digit = 3,
+  main.effect.only = NULL,
+  intn.effect.only = NULL
+)
 }
 \arguments{
 \item{model1}{the 1st  regression model}

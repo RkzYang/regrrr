@@ -4,11 +4,28 @@
 \alias{combine_long_tab}
 \title{Combine regression results from different models by columns}
 \usage{
-combine_long_tab(tbl_1, tbl_2, tbl_3 = NULL, tbl_4 = NULL,
-  tbl_5 = NULL, tbl_6 = NULL, tbl_7 = NULL, tbl_8 = NULL,
-  tbl_9 = NULL, tbl_10 = NULL, tbl_11 = NULL, tbl_12 = NULL,
-  tbl_13 = NULL, tbl_14 = NULL, tbl_15 = NULL, tbl_16 = NULL,
-  tbl_17 = NULL, tbl_18 = NULL, tbl_19 = NULL, tbl_20 = NULL)
+combine_long_tab(
+  tbl_1,
+  tbl_2,
+  tbl_3 = NULL,
+  tbl_4 = NULL,
+  tbl_5 = NULL,
+  tbl_6 = NULL,
+  tbl_7 = NULL,
+  tbl_8 = NULL,
+  tbl_9 = NULL,
+  tbl_10 = NULL,
+  tbl_11 = NULL,
+  tbl_12 = NULL,
+  tbl_13 = NULL,
+  tbl_14 = NULL,
+  tbl_15 = NULL,
+  tbl_16 = NULL,
+  tbl_17 = NULL,
+  tbl_18 = NULL,
+  tbl_19 = NULL,
+  tbl_20 = NULL
+)
 }
 \arguments{
 \item{tbl_1}{the 1st  data.frame of regression result}

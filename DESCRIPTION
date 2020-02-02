@@ -10,7 +10,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Suggests: testthat
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Imports: stats,
          purrr,
          dplyr,
@@ -20,9 +20,7 @@ Imports: stats,
          scales,
          robustbase,
          stringr,
-         spatstat,
          MuMIn,
          ggplot2,
-         rlang,
          lspline
 BugReports: https://github.com/RayKYang/regrrr/issues
