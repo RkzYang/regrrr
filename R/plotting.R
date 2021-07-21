@@ -25,9 +25,10 @@
 #' @param mdrt.high.name the label of high-level moderator
 #' @param y.high.lim specify the upper limit of y
 #' @param y.low.lim specify the lower limit of y
-#' @param spline_labels label of the spline variable
+#' @param spline_labels label of the spline variable; when the main varaible is a linear spline and spline labels are supplied, the moderation effect will be presented by facets.
 #' 
 #' @examples
+#'\dontrun{
 #' data(mtcars)
 #' m1 <- lm(mpg ~ vs + carb + hp + wt + wt * hp , data = mtcars)
 #' plot_effect(reg.coef = summary(m1)$coefficients,
@@ -35,8 +36,10 @@
 #'                  x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp",
 #'                  confidence_interval = TRUE,  CI_Ribbon = TRUE,
 #'                  xlab = "Weight", ylab = "MPG", moderator.lab = "Horsepower")
+#'}
 #' 
 #' #' @examples
+#'\dontrun{
 #' data(mtcars)
 #' m2 <- lm(mpg ~ vs + carb + hp + wt + wt * hp + wt * vs, data = mtcars)
 #' plot_effect(reg.coef = summary(m2)$coefficients,
@@ -44,6 +47,16 @@
 #'             x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp",
 #'             confidence_interval = TRUE,  CI_Ribbon = FALSE,
 #'             xlab = "Weight", ylab = "MPG", moderator.lab = "Horsepower")
+#'}
+#' 
+#' #' @examples
+#'\dontrun{
+#' data(mtcars)
+#' m3 <- lm(mpg ~ vs + carb + hp + lspline(wt, knots = 4, marginal = FALSE) * hp, data = mtcars)
+#' plot_effect(reg.coef=summary(m3)$coefficients, 
+#'             data = mtcars, model = m3, x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp",
+#'             xlab="Weight", ylab="MPG", moderator.lab="Horsepower") 
+#'}
 #' 
 #' @examples
 #'\dontrun{
@@ -74,6 +87,7 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
                         mdrt.low.name="Low", mdrt.mid.name=NULL, mdrt.high.name="High",
                         y.high.lim=NULL, y.low.lim=NULL, spline_labels=c("LHS", "RHS")){
   
+
   if(class(reg.coef)[1] == "coeftest"){
     reg.coef <- as.data.frame(`[`(reg.coef))
     if(is.null(v)){
@@ -92,17 +106,23 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
     factor.names <- rownames(reg.result)[stringr::str_detect(rownames(reg.result), pattern = "factor")]
     factor.name <- unique(unlist(purrr::map(factor.names, function(x) stringr::str_extract(x, pattern = "(?<=\\().*?(?=\\))")[1])))
     
+    # detect and extract the lspline variable name
     lspline.names <- rownames(reg.result)[stringr::str_detect(rownames(reg.result), pattern = "lspline")]
     lspline.name_ <- unique(unlist(purrr::map(lspline.names, function(x) stringr::str_extract(x, pattern = "(?<=\\().*?(?=\\))")[1])))
     if(!is.null(lspline.name_)){
-    lspline.name <- strsplit(lspline.name_, ",")[[1]][1]}else{
-      lspline.name <- NULL  
-    }
+      lspline.name <- strsplit(lspline.name_, ",")[[1]][1]}else{
+        lspline.name <- NULL  
+      }
     
     non.factor.names <- names(df)[names(df) %in% rownames(reg.result)]
     
     # 1 the beta values of interested variables #####
-    main1.r <- which(rownames(reg.result) == x_var.name)
+    
+    if (!is.null(lspline.name) && x_var.name == lspline.name){
+      main1.r <- which(rownames(reg.result) == lspline.names[1])
+    }else{
+      main1.r <- which(rownames(reg.result) == x_var.name)
+    }
     mdrt.r  <- which(rownames(reg.result) == moderator.name) 
     
     # 2 set moderator levels (low, mid, high) #####
@@ -124,8 +144,13 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
     }
     
     # 3 adjust the margin of x axis #####
-    min.x <- as.numeric(quantile(unlist(df[rownames(reg.result)[main1.r]]), probs=min_x, rm.na=TRUE))
-    max.x <- as.numeric(quantile(unlist(df[rownames(reg.result)[main1.r]]), probs=max_x, rm.na=TRUE))
+    if (!is.null(lspline.name) && x_var.name == lspline.name){
+      min.x <- as.numeric(quantile(unlist(df[which(names(df) == lspline.name)]), probs=min_x, rm.na=TRUE))
+      max.x <- as.numeric(quantile(unlist(df[which(names(df) == lspline.name)]), probs=max_x, rm.na=TRUE))
+    }else{
+      min.x <- as.numeric(quantile(unlist(df[rownames(reg.result)[main1.r]]), probs=min_x, rm.na=TRUE))
+      max.x <- as.numeric(quantile(unlist(df[rownames(reg.result)[main1.r]]), probs=max_x, rm.na=TRUE))
+    }
     
     # 4 make a hypothetical dataset (all other variables other than x and moderator are held to median or mean) for plotting #####
     main.x.name <- x_var.name
@@ -136,14 +161,17 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
     other_continuous_var_names <- non.factor.names[! non.factor.names %in% c(main.x.name, modrtr.name)]
     df.other.var <- df[, other_continuous_var_names]
     
-    # 4.1 lspline var #####
-    if(!is.null(mdrt_quantile_05))
+    # 4.1 lspline moderater var #####
+    if (!is.null(lspline.name) && x_var.name != lspline.name)
     {
-      df.fake.lspline.var <- data.frame(replicate(150, robustbase::colMedians(as.matrix(df.lspline.var), na.rm = TRUE)))
-    }else{
-      df.fake.lspline.var <- data.frame(replicate(150, colMeans(as.matrix(df.lspline.var), na.rm = TRUE)))
+      if(!is.null(mdrt_quantile_05))
+      {
+        df.fake.lspline.var <- data.frame(replicate(150, robustbase::colMedians(as.matrix(df.lspline.var), na.rm = TRUE)))
+      }else{
+        df.fake.lspline.var <- data.frame(replicate(150, colMeans(as.matrix(df.lspline.var), na.rm = TRUE)))
+      }
+      names(df.fake.lspline.var) <- lspline.name
     }
-    names(df.fake.lspline.var) <- lspline.name
     
     # 4.2 if there is only one "factor" variable #####
     if(length(factor.name) == 1){
@@ -175,9 +203,9 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
       df.fake.other.var <- cbind(df.fake.factor.var, df.fake.other.var)
     }
     
-    if(length(lspline.name) > 0 && modrtr.name != lspline.name){
-      df.fake.other.var <- cbind(df.fake.lspline.var, df.fake.other.var)
-    }
+    # if(length(lspline.name) > 0 && modrtr.name != lspline.name){
+    #   df.fake.other.var <- cbind(df.fake.lspline.var, df.fake.other.var)
+    # }
     
     # contruct df.fake
     if(!is.null(mdrt.mid.name)){
@@ -239,12 +267,14 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
                               mod.level = rep(c(mdrt.low.name, mdrt.mid.name, mdrt.high.name, mdrt.low.name, mdrt.mid.name, mdrt.high.name), each=25),
                               knots = rep(spline_labels, each=75),
                               df.fake.other.var)
+        # df.fake$mod.level <- factor(df.fake$mod.level, levels = c(mdrt.low.name, mdrt.mid.name, mdrt.high.name))
       }else{
         df.fake <- data.frame(x = rep(seq(min.x, max.x, length=25), 4), 
                               mod = rep(c(mdrt.low, mdrt.high, mdrt.low_, mdrt.high_), each=25),
                               mod.level = rep(c(mdrt.low.name, mdrt.high.name, mdrt.low.name, mdrt.high.name), each=25),
                               knots = rep(spline_labels, each=50),
                               df.fake.other.var[1:100,])
+        # df.fake$mod.level <- factor(df.fake$mod.level, levels = c(mdrt.low.name, mdrt.high.name))
       }
       
       if(!is.null(moderator.name)){
@@ -256,6 +286,7 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
     # 4.5 plug in y_hat #####
     df.fake$y_hat <- predict(model, df.fake, type = "response")
     names(df.fake)[length(names(df.fake))] <- y_var.name
+    
     # add confidence intervals
     # df.fake <- cbind(df.fake, predict(model, df.fake, interval = "confidence")[, 2:3])
     
@@ -348,7 +379,7 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
         if(!is.null(mdrt.mid.name)){
           p <- p + ggplot2::scale_linetype_manual(moderator.lab, values=c("solid", "dashed", "dotted"))
         }else{
-          p <- p + ggplot2::scale_linetype_manual(moderator.lab, values=c("solid", "dashed"))
+          p <- p + ggplot2::scale_linetype_manual(moderator.lab, values=c("solid", "dotted"))
         }
       }else{
         if(CI_Ribbon == FALSE){
@@ -376,7 +407,11 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
     }
     
     if(!is.null(lspline.name) && modrtr.name == lspline.name){
-      p <- p + ggplot2::facet_wrap(~knots)
+      p <- p + ggplot2::facet_wrap(~factor(knots, levels=spline_labels))
+    }
+    
+    if (spline_labels != c("LHS", "RHS") && x_var.name == lspline.name){
+      p <- p + ggplot2::facet_wrap(~factor(mod.level, levels=c(mdrt.low.name, mdrt.mid.name, mdrt.high.name)))
     }
     
     # customize #

@@ -1,3 +1,3 @@
-* Current Version 0.1.1
-* Release Date 2/1/2020
-* Bugs Fixed
+* Current Version 0.1.2
+* Release Date 7/21/2021
+* Added Plotting Functionality

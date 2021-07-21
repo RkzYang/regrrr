@@ -84,12 +84,13 @@ plot_effect(
 
 \item{y.low.lim}{specify the lower limit of y}
 
-\item{spline_labels}{label of the spline variable}
+\item{spline_labels}{label of the spline variable; when the main varaible is a linear spline and spline labels are supplied, the moderation effect will be presented by facets.}
 }
 \description{
 plotting the marginal effect of X on Y, with or without one or multiple interaction terms
 }
 \examples{
+\dontrun{
 data(mtcars)
 m1 <- lm(mpg ~ vs + carb + hp + wt + wt * hp , data = mtcars)
 plot_effect(reg.coef = summary(m1)$coefficients,
@@ -97,8 +98,10 @@ plot_effect(reg.coef = summary(m1)$coefficients,
                  x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp",
                  confidence_interval = TRUE,  CI_Ribbon = TRUE,
                  xlab = "Weight", ylab = "MPG", moderator.lab = "Horsepower")
+}
 
 #' @examples
+\dontrun{
 data(mtcars)
 m2 <- lm(mpg ~ vs + carb + hp + wt + wt * hp + wt * vs, data = mtcars)
 plot_effect(reg.coef = summary(m2)$coefficients,
@@ -106,6 +109,16 @@ plot_effect(reg.coef = summary(m2)$coefficients,
             x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp",
             confidence_interval = TRUE,  CI_Ribbon = FALSE,
             xlab = "Weight", ylab = "MPG", moderator.lab = "Horsepower")
+}
+
+#' @examples
+\dontrun{
+data(mtcars)
+m3 <- lm(mpg ~ vs + carb + hp + lspline(wt, knots = 4, marginal = FALSE) * hp, data = mtcars)
+plot_effect(reg.coef=summary(m3)$coefficients, 
+            data = mtcars, model = m3, x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp",
+            xlab="Weight", ylab="MPG", moderator.lab="Horsepower") 
+}
 
 \dontrun{
 # this shows the function is compatible with ggplot2 customization
