@@ -1,5 +1,5 @@
 # regrrr (Toolkit for Compiling and Plotting Regression Results)
-[![Rdoc](http://www.rdocumentation.org/badges/version/regrrr)](http://www.rdocumentation.org/packages/regrrr)
+[![Rdoc](https://www.rdocumentation.org/badges/version/regrrr)](https://www.rdocumentation.org/packages/regrrr)
 [![](https://cranlogs.r-pkg.org/badges/regrrr)](https://cran.r-project.org/package=regrrr)
 
 # Description
@@ -13,7 +13,7 @@ library(regrrr)
 ```
 You can also use devtools to install the latest development version:
 ```
-devtools::install_github("raykyang/regrrr")
+devtools::install_github("RkzYang/regrrr")
 library(regrrr)
 ```
 
@@ -48,5 +48,15 @@ plot_effect(reg.coef = summary(m2)$coefficients, data = mtcars, model = m2,
             x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp",
             confidence_interval = TRUE,  CI_Ribbon = FALSE, 
             xlab = "Weight", ylab = "MPG", moderator.lab = "Horsepower") +
+ggplot2::theme(text=ggplot2::element_text(family="Times New Roman", size = 16))
+```
+
+```
+# plot the moderating effect with a linear spline
+library(lspline)
+m3 <- lm(mpg ~ vs + carb + hp + lspline(wt, knots = 4, marginal = FALSE) * hp, data = mtcars)
+plot_effect(reg.coef=summary(m3)$coefficients, data = mtcars, model = m3, 
+            x_var.name = "wt", y_var.name = "mpg", moderator.name = "hp",
+            xlab="Weight", ylab="MPG", moderator.lab="Horsepower") +
 ggplot2::theme(text=ggplot2::element_text(family="Times New Roman", size = 16))
 ```

@@ -284,7 +284,11 @@ plot_effect <- function(reg.coef, data, model, by_color = FALSE, x_var.name = NU
     }
     
     # 4.5 plug in y_hat #####
-    df.fake$y_hat <- predict(model, df.fake, type = "response")
+    if (class(model) == "coxph"){
+      df.fake$y_hat <- predict(model, df.fake, type = "risk")
+    }else{
+      df.fake$y_hat <- predict(model, df.fake, type = "response")
+    }
     names(df.fake)[length(names(df.fake))] <- y_var.name
     
     # add confidence intervals
